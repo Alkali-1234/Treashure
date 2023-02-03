@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import { login } from '../service/LoginSignupService';
 
 function Login_Signup( {navigation} ) {
     
     const [signUp, toggleSignUp] = useState(false);
+    //Login
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    
 
     useEffect(() => {
         navigation.setOptions({headerShown: false})
@@ -37,15 +42,15 @@ function Login_Signup( {navigation} ) {
                     <Text style={{color: '#756666', fontStyle: 'italic'}}>"Heaps of treasures lie among'st our trash"</Text>
                 </View>
                 <View style={{marginTop: 75}}>
-                    <TextInput style={styles.input} placeholder="Email/Username" />
-                    <TextInput style={[styles.input, {marginTop:62}]} placeholder="Password" secureTextEntry={true} />
+                    <TextInput style={styles.input} placeholder="Email/Username" onChangeText={setUsername} />
+                    <TextInput style={[styles.input, {marginTop:62}]} placeholder="Password" onChangeText={setPassword} secureTextEntry={true} />
                     <View style={{flexDirection: 'row'}}>
                         <Text style={{color: '#756666'}}>Dont have an account? </Text>
                         <TouchableOpacity onPress={() => toggleSignUp(!signUp)}><Text style={{color: 'blue'}}>Sign Up!</Text></TouchableOpacity> 
                     </View>
                                   
                 </View>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={() => {if(login(username, password)){navigation.navigate("Home")}}}>
                     <Text style={{color:'white'}}>Login</Text>
                 </TouchableOpacity>
             </View>  

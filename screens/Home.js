@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { TouchableOpacity, View, Text } from 'react-native'
 
 
@@ -7,6 +7,9 @@ function Home({navigation}) {
     const navigateToLogin_Signup = () => {
         navigation.navigate("Login_Signup");
     }
+    useEffect(() => {
+      navigation.setOptions({headerShown: false})
+    })
 
   return (
     <View>
