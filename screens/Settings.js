@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { TouchableOpacity, View, Text } from 'react-native';
 
-function Home({navigation}) {
+function Settings({navigation}) {
   
     useEffect(() => {
       navigation.setOptions({headerShown: false})
@@ -9,9 +9,9 @@ function Home({navigation}) {
 
   return (
     <View>
-      <Text>Home</Text>
+
     </View>
   )
 }
 
-export default Home;
+export default Settings;

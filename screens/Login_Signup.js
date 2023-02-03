@@ -50,7 +50,7 @@ function Login_Signup( {navigation} ) {
                     </View>
                                   
                 </View>
-                <TouchableOpacity style={styles.button} onPress={() => {if(login(username, password)){navigation.navigate("Home")}}}>
+                <TouchableOpacity style={styles.button} onPress={() => {if(login(username, password)){navigation.navigate("Main")}}}>
                     <Text style={{color:'white'}}>Login</Text>
                 </TouchableOpacity>
             </View>  
