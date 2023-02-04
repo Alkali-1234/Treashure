@@ -1,8 +1,30 @@
 import React, { useEffect } from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet, Image, FlatList } from 'react-native';
 import { Theme } from '../service/UniversalTheme';
 import { userDataSnapshot } from '../service/UserDataService';
+import AnnouncementCard from '../components/AnnouncementCard';
 import { FontAwesome5 } from 'react-native-vector-icons'
+
+const dummyFlatListData = [
+  {
+    id: 1,
+    title: "New Arrivals!",
+    description: "Come check out these 3 new items: Red Beanie, Red Sweater, and a black-themed landyard. Get it before it's gone!",
+    image: userDataSnapshot.profilePictureLink,
+    author: "Alkaline",
+    authorProfilePictureLink: userDataSnapshot.profilePictureLink
+
+  },
+  {
+    id: 2,
+    title: "New Update!",
+    description: "Update 0.4.0 New update!",
+    image: userDataSnapshot.profilePictureLink,
+    author: "Alkaline",
+    authorProfilePictureLink: userDataSnapshot.profilePictureLink
+
+  }
+]
 
 function Home({navigation}) {
   
@@ -28,16 +50,21 @@ function Home({navigation}) {
         <View>
           
           <View style={{flexDirection: 'row'}}>
-            <View style={styles.recentActivities.textContainer}>
-            <Text style={styles.recentActivities.text}>Recent Activities</Text>
-            </View>
-            <View style={{alignItems: 'center', justifyContent: 'center', width: 55, backgroundColor: Theme.secondary, borderRadius: 15, marginLeft: 10}} >
+            <View style={{alignItems: 'center', justifyContent: 'center', width: 55, backgroundColor: Theme.secondary, borderRadius: 15}} >
               <FontAwesome5 name='bolt' size={24} color={Theme.text.primary} />
             </View>
-            
+            <View style={styles.recentActivities.textContainer}>
+              
+            <Text style={styles.recentActivities.text}>Announcements</Text>
+            </View>
           </View>
           <View style={styles.recentActivities.container}>
-            {/* TODO: FlatList */}
+            {dummyFlatListData.map((item) =>
+              <TouchableOpacity>
+                <AnnouncementCard key={item.id} title={item.title} description={item.description} imageLink={item.image} author={item.author} authorProfilePictureLink={item.authorProfilePictureLink} />
+              </TouchableOpacity>
+              
+            )}
           </View>
         </View>
       </View>
@@ -78,7 +105,6 @@ const styles = StyleSheet.create({
       padding: 10,
     },
     textContainer: {
-      backgroundColor: Theme.secondary,
       width: 208,
       borderRadius: 15
     },
@@ -86,7 +112,8 @@ const styles = StyleSheet.create({
       marginTop: 15,
       borderRadius: 15,
       height: 250,
-      backgroundColor: Theme.secondary
+      backgroundColor: Theme.secondary,
+      alignItems: 'center',
     }
   }
 })
