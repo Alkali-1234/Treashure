@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, Image, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { TouchableOpacity, View, Text, StyleSheet, Image, Modal } from 'react-native';
 import { Theme } from '../service/UniversalTheme';
 import { userDataSnapshot } from '../service/UserDataService';
 import AnnouncementCard from '../components/AnnouncementCard';
-import { FontAwesome5 } from 'react-native-vector-icons'
+import { FontAwesome5, Ionicons } from 'react-native-vector-icons'
+import * as HomeService from '../service/HomeService';
+
 
 const dummyFlatListData = [
   {
@@ -27,7 +29,9 @@ const dummyFlatListData = [
 ]
 
 function Home({navigation}) {
-  
+
+  const [showSelectedItemModal, setShowSelectedItemModal] = useState(false);
+
     useEffect(() => {
       navigation.setOptions({headerShown: false})
     })
@@ -60,7 +64,10 @@ function Home({navigation}) {
           </View>
           <View style={styles.recentActivities.container}>
             {dummyFlatListData.map((item) =>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => {
+                setShowSelectedItemModal(true);
+                HomeService.setAnnouncementSelectedItem(item);
+              }} key={item.id}>
                 <AnnouncementCard key={item.id} title={item.title} description={item.description} imageLink={item.image} author={item.author} authorProfilePictureLink={item.authorProfilePictureLink} />
               </TouchableOpacity>
               
@@ -68,6 +75,37 @@ function Home({navigation}) {
           </View>
         </View>
       </View>
+      <Modal
+        animationType='fade'
+        visible={showSelectedItemModal}
+        onRequestClose={() => setShowSelectedItemModal(false)}
+        transparent={true}
+      >
+        <View style={styles.modalContainer}>
+            <View style={styles.modalMainContent}>
+              <View style={{height: "90%", width: "100%"}}>
+                <Image source={{uri: HomeService.announcementCurrentSelectedItem?.image}} style={styles.modalImage} />
+                <View style={styles.modalTopContentContainer}>
+                  <Text style={styles.modalTitle}>{HomeService.announcementCurrentSelectedItem?.title}</Text>
+                  <Text style={styles.modalDescription}>{HomeService.announcementCurrentSelectedItem?.description}</Text>
+                </View>
+              </View>
+              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <View style={styles.modalFooter}>
+                <Image source={{uri: HomeService.announcementCurrentSelectedItem?.authorProfilePictureLink}} style={styles.modalFooterImage} />
+                <Text style={styles.footerText}>{HomeService.announcementCurrentSelectedItem?.author}</Text>
+                </View>
+                <View style={styles.modalCloseButtonContainer}>
+                  <TouchableOpacity onPress={() => setShowSelectedItemModal(false)}>
+                    <Ionicons name="exit-outline" size={24} color={Theme.text.primary} />
+                  </TouchableOpacity>
+                  
+                </View>
+              </View>
+              
+            </View>
+        </View>
+      </Modal>
     </View>
   )
 }
@@ -115,6 +153,65 @@ const styles = StyleSheet.create({
       backgroundColor: Theme.secondary,
       alignItems: 'center',
     }
+  },
+  modalContainer: {
+    backgroundColor: 'rgba(20, 19, 19, 0.64)',
+    height: "100%",
+    width: "100%",
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  modalMainContent: {
+    backgroundColor: Theme.primary,
+    height: "60%",
+    width: "60%",
+    borderRadius: 10,
+    justifyContent: 'space-between'
+  },
+  modalImage: {
+    width: "100%",
+    height: "35%",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10
+  },
+  modalTopContentContainer: {
+    marginHorizontal: 10
+  },
+  modalTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: Theme.text.primary
+  },
+  modalDescription: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: Theme.text.primary,
+    fontStyle: 'italic'
+  },
+  modalFooter: {
+    marginLeft: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  modalFooterImage: {
+    height: 30,
+    width: 30,
+    borderRadius: 15
+  },
+  footerText: {
+    marginLeft: 5,
+    fontSize: 15
+  },
+  modalCloseButtonContainer: {
+    marginRight: 10,
+    marginBottom: 10,
+    justifyContent: 'center',
+    backgroundColor: Theme.secondary,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    borderRadius: 5
   }
 })
 
