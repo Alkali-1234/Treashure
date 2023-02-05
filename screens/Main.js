@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Entypo, MaterialIcons } from 'react-native-vector-icons';
-import Home from './Home';
 import Settings from './Settings';
 import { Theme } from '../service/UniversalTheme';
+import Home from './Home';
 const Tab = createBottomTabNavigator();
 
 

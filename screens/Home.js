@@ -3,7 +3,7 @@ import { TouchableOpacity, View, Text, StyleSheet, Image, Modal } from 'react-na
 import { Theme } from '../service/UniversalTheme';
 import { userDataSnapshot } from '../service/UserDataService';
 import AnnouncementCard from '../components/AnnouncementCard';
-import { FontAwesome5, Ionicons } from 'react-native-vector-icons'
+import { FontAwesome5, Ionicons, AntDesign } from 'react-native-vector-icons'
 import * as HomeService from '../service/HomeService';
 
 
@@ -73,7 +73,19 @@ function Home({navigation}) {
               
             )}
           </View>
+          
         </View>
+        <View style={styles.exchangeButtonContainer}>
+          <TouchableOpacity style={styles.exchangeButton} onPress={() => navigation.navigate("TrashExchange")}>
+            <Text style={styles.exchangeText}>Trash Exchange</Text>
+            <AntDesign name="right" size={24} color={Theme.text.primary} />
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.exchangeButton, {marginTop: 15}]}>
+            <Text style={styles.exchangeText}>Coin Exchange</Text>
+            <AntDesign name="right" size={24} color={Theme.text.primary} />
+          </TouchableOpacity>
+        </View>
+
       </View>
       <Modal
         animationType='fade'
@@ -134,7 +146,10 @@ const styles = StyleSheet.create({
   },
   mainContentContainer: {
     marginHorizontal: 30,
-    marginTop: 15
+    marginTop: 15,
+    flexDirection: 'column',
+    flex: 1,
+    justifyContent: 'space-between'
   },
   recentActivities: {
     text: {
@@ -148,8 +163,8 @@ const styles = StyleSheet.create({
     },
     container: {
       marginTop: 15,
-      borderRadius: 15,
-      height: 250,
+      borderRadius: 10,
+      height: 400,
       backgroundColor: Theme.secondary,
       alignItems: 'center',
     }
@@ -212,6 +227,21 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 5,
     borderRadius: 5
+  },
+  exchangeButtonContainer: {
+    marginVertical: 15,
+  },
+  exchangeButton: {
+    padding: 10,
+    backgroundColor: Theme.secondary,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  exchangeText: {
+    color: Theme.text.primary,
+    fontSize: 18
   }
 })
 
