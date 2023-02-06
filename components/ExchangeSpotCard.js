@@ -18,19 +18,16 @@ const ExchangeSpotCard = ({address, district, link}) => {
     }
 
   return (
-    <TouchableOpacity onPress={handlePress}>
         <View style={styles.container}>
         <View>
             <Text style={styles.title}>{address}</Text>
             <Text style={styles.district}>{district}</Text>
         </View>
         <View>
-            <AntDesign name="right" size={40} color={Theme.text.primary} />
+            <AntDesign name="right" size={24} color={Theme.text.primary} />
         </View>
         
         </View>
-        
-    </TouchableOpacity>
     
   )
 }
@@ -44,6 +41,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         flexDirection: 'row',
         alignItems: 'center',
+        marginTop: 15
     },
     title: {
         fontSize: 20,

@@ -5,35 +5,17 @@ import { userDataSnapshot } from '../service/UserDataService';
 import AnnouncementCard from '../components/AnnouncementCard';
 import { FontAwesome5, Ionicons, AntDesign } from 'react-native-vector-icons'
 import * as HomeService from '../service/HomeService';
-
-
-const dummyFlatListData = [
-  {
-    id: 1,
-    title: "New Arrivals!",
-    description: "Come check out these 3 new items: Red Beanie, Red Sweater, and a black-themed landyard. Get it before it's gone!",
-    image: userDataSnapshot.profilePictureLink,
-    author: "Alkaline",
-    authorProfilePictureLink: userDataSnapshot.profilePictureLink
-
-  },
-  {
-    id: 2,
-    title: "New Update!",
-    description: "Update 0.4.0 New update!",
-    image: userDataSnapshot.profilePictureLink,
-    author: "Alkaline",
-    authorProfilePictureLink: userDataSnapshot.profilePictureLink
-
-  }
-]
+import { UniversalAnnouncementData } from '../service/UniversalService';
 
 function Home({navigation}) {
 
   const [showSelectedItemModal, setShowSelectedItemModal] = useState(false);
+  const [announcementData, setAnnouncementData] = useState(null);
+
 
     useEffect(() => {
       navigation.setOptions({headerShown: false})
+      setAnnouncementData(UniversalAnnouncementData);
     })
 
   return (
@@ -63,7 +45,7 @@ function Home({navigation}) {
             </View>
           </View>
           <View style={styles.recentActivities.container}>
-            {dummyFlatListData.map((item) =>
+            {announcementData?.map((item) =>
               <TouchableOpacity onPress={() => {
                 setShowSelectedItemModal(true);
                 HomeService.setAnnouncementSelectedItem(item);
@@ -80,7 +62,7 @@ function Home({navigation}) {
             <Text style={styles.exchangeText}>Trash Exchange</Text>
             <AntDesign name="right" size={24} color={Theme.text.primary} />
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.exchangeButton, {marginTop: 15}]}>
+          <TouchableOpacity style={[styles.exchangeButton, {marginTop: 15}]} onPress={() => navigation.navigate("CoinExchange")}>
             <Text style={styles.exchangeText}>Coin Exchange</Text>
             <AntDesign name="right" size={24} color={Theme.text.primary} />
           </TouchableOpacity>
