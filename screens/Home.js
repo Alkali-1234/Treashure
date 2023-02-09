@@ -161,9 +161,9 @@ const styles = StyleSheet.create({
   },
   modalMainContent: {
     backgroundColor: Theme.primary,
-    height: "60%",
-    width: "60%",
-    borderRadius: 10,
+    height: "75%",
+    width: "75%",
+    borderRadius: 15,
     justifyContent: 'space-between'
   },
   modalImage: {
