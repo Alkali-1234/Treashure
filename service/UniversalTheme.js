@@ -4,5 +4,8 @@ export const Theme = {
     'text' : {
         'primary' : '#000000',
         'secondary' : '#9E9E9E',
+    },
+    'form' : {
+        'background' : 'rgba(0, 0, 0, 0.05)'
     }
 }
