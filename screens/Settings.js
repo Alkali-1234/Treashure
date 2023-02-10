@@ -9,7 +9,7 @@ function Settings({navigation}) {
 
   return (
     <View>
-
+      <TouchableOpacity onPress={() => navigation.navigate("AdminPanel")} style={{marginTop: 20}}><Text>admin</Text></TouchableOpacity>
     </View>
   )
 }

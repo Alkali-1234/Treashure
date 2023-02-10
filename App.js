@@ -7,6 +7,7 @@ import Login_Signup from './screens/Login_Signup';
 import Main from './screens/Main';
 import TrashExchange from './screens/TrashExchange';
 import CoinExchange from './screens/CoinExchange';
+import AdminPanel from './screens/AdminPanel';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ export default function App() {
           <Stack.Screen name="Main" component={Main} />
           <Stack.Screen name="TrashExchange" component={TrashExchange} />
           <Stack.Screen name="CoinExchange" component={CoinExchange} />
+          <Stack.Screen name="AdminPanel" component={AdminPanel} />
         </Stack.Navigator>
       </NavigationContainer>
   );
