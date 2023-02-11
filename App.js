@@ -8,6 +8,7 @@ import Main from './screens/Main';
 import TrashExchange from './screens/TrashExchange';
 import CoinExchange from './screens/CoinExchange';
 import AdminPanel from './screens/AdminPanel';
+import RewardRequested from './screens/RewardRequested';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ export default function App() {
           <Stack.Screen name="Main" component={Main} />
           <Stack.Screen name="TrashExchange" component={TrashExchange} />
           <Stack.Screen name="CoinExchange" component={CoinExchange} />
+          <Stack.Screen name="RewardRequested" component={RewardRequested} />
           <Stack.Screen name="AdminPanel" component={AdminPanel} />
         </Stack.Navigator>
       </NavigationContainer>

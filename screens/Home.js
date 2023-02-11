@@ -6,6 +6,7 @@ import AnnouncementCard from '../components/AnnouncementCard';
 import { FontAwesome5, Ionicons, AntDesign } from 'react-native-vector-icons'
 import * as HomeService from '../service/HomeService';
 import { UniversalAnnouncementData } from '../service/UniversalService';
+import * as Value from '../constants/trashValueConstants';
 
 function Home({navigation}) {
 
@@ -35,27 +36,51 @@ function Home({navigation}) {
       <View style={styles.mainContentContainer} >
         <View>
           
-          <View style={{flexDirection: 'row'}}>
-            <View style={{alignItems: 'center', justifyContent: 'center', width: 55, backgroundColor: Theme.secondary, borderRadius: 15}} >
+        <View style={{flexDirection: 'row'}}>
+          <View style={{alignItems: 'center', justifyContent: 'center', width: 55, backgroundColor: Theme.secondary, borderRadius: 15}} >
+            <FontAwesome5 name='bolt' size={24} color={Theme.text.primary} />
+          </View>
+          <View style={styles.recentActivities.textContainer}>
+            
+          <Text style={styles.recentActivities.text}>Announcements</Text>
+          </View>
+        </View>
+        <View style={styles.recentActivities.container}>
+          {announcementData?.map((item) =>
+            <TouchableOpacity onPress={() => {
+              setShowSelectedItemModal(true);
+              HomeService.setAnnouncementSelectedItem(item);
+            }} key={item.id}>
+              <AnnouncementCard key={item.id} title={item.title} description={item.description} imageLink={item.image} author={item.author} authorProfilePictureLink={item.authorProfilePictureLink} />
+            </TouchableOpacity>
+            
+          )}
+        </View>
+        
+        {/* Trash Directory */}
+        <View>
+          <Text style={[styles.recentActivities.text, {textAlign: 'center', padding: 0, margin: 10}]}>Trash Values</Text>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: Theme.secondary, marginTop: 10, borderRadius: 15, flexDirection: 'row', padding: 10}} >
               <FontAwesome5 name='bolt' size={24} color={Theme.text.primary} />
+              <Text style={{marginLeft: 10}}>Plastic</Text>
             </View>
-            <View style={styles.recentActivities.textContainer}>
-              
-            <Text style={styles.recentActivities.text}>Announcements</Text>
+            <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: Theme.secondary, marginTop: 10, borderRadius: 15, flexDirection: 'row', padding: 10}}>
+              <Text style={{color: Theme.text.primary, fontSize: 20, fontWeight: 'bold'}}>{Value.PLASTIC_MULTIPLIER}C/100G</Text>
             </View>
           </View>
-          <View style={styles.recentActivities.container}>
-            {announcementData?.map((item) =>
-              <TouchableOpacity onPress={() => {
-                setShowSelectedItemModal(true);
-                HomeService.setAnnouncementSelectedItem(item);
-              }} key={item.id}>
-                <AnnouncementCard key={item.id} title={item.title} description={item.description} imageLink={item.image} author={item.author} authorProfilePictureLink={item.authorProfilePictureLink} />
-              </TouchableOpacity>
-              
-            )}
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: Theme.secondary, marginTop: 10, borderRadius: 15, flexDirection: 'row', padding: 10}} >
+              <FontAwesome5 name='bolt' size={24} color={Theme.text.primary} />
+              <Text style={{marginLeft: 10}}>Cardboard</Text>
+            </View>
+            <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: Theme.secondary, marginTop: 10, borderRadius: 15, flexDirection: 'row', padding: 10}}>
+              <Text style={{color: Theme.text.primary, fontSize: 20, fontWeight: 'bold'}}>{Value.CARDBOARD_MULTIPLIER}C/100G</Text>
+            </View>
           </View>
-          
+        </View>
+        
+
         </View>
         <View style={styles.exchangeButtonContainer}>
           <TouchableOpacity style={styles.exchangeButton} onPress={() => navigation.navigate("TrashExchange")}>
@@ -146,7 +171,7 @@ const styles = StyleSheet.create({
     container: {
       marginTop: 15,
       borderRadius: 10,
-      height: 400,
+      height: 250,
       backgroundColor: Theme.secondary,
       alignItems: 'center',
     }
