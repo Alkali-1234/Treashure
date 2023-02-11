@@ -7,7 +7,8 @@ export let userDataSnapshot = {
     'password': "loremIpsum1234",
     'coins': 100,
     'trash': 572,
-    'joined': '1/1/2023'
+    'joined': '1/1/2023',
+    'isAdmin': false,
 
 
 }

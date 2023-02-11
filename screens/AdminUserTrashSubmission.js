@@ -8,7 +8,7 @@ import * as Value from '../constants/trashValueConstants';
 
 
 
-const AdminPanel = () => {
+const AdminUserTrashSubmission = () => {
     const [latestID, setLatestID] = useState(1);
     const [username, setUsername] = useState('');
     const [showConfirmTrashSubmissionModal, setShowConfirmTrashSubmissionModal] = useState(false);
@@ -52,10 +52,9 @@ const AdminPanel = () => {
 
   return (
     <View style={styles.container}>
-        <Text style={styles.header}>Admin Control Panel</Text>
+        <Text style={styles.header}>User Trash Submission</Text>
         <ScrollView style={{marginTop: 30, width: "100%"}}>
             <View style={styles.cardContainer}>
-                <View style={styles.cardHeaderContainer}><Text style={styles.cardHeaderText}>User Trash Submission</Text></View>
                 <TextInput placeholder='Username' style={styles.genericTextInput} placeholderTextColor={Theme.text.secondary} onChangeText={(value) => setUsername(value)} />
                 
 
@@ -133,7 +132,7 @@ const AdminPanel = () => {
                     <View style={styles.acceptTrashDirectory}>
                             <ScrollView style={{width: "100%", height: 100}}>
                             {trashList.map((item, index) => (
-                                <View style={styles.acceptTrashDirectoryContainer}>
+                                <View key={index} style={styles.acceptTrashDirectoryContainer}>
                                     <Text style={styles.acceptTrashDirectoryText}>Plastic : 300 x 5/100G</Text>
                                     <Text style={styles.acceptTrashDirectoryTextAmount}>1500</Text>
                                 </View>
@@ -174,7 +173,7 @@ const styles = StyleSheet.create({
         backgroundColor: Theme.primary
     },
     header: {
-        fontSize: 30,
+        fontSize: 24,
         textAlign: 'center',
         color: Theme.text.primary
     },
@@ -297,4 +296,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default AdminPanel;
+export default AdminUserTrashSubmission;

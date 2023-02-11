@@ -7,6 +7,7 @@ import { FontAwesome5, Ionicons, AntDesign } from 'react-native-vector-icons'
 import * as HomeService from '../service/HomeService';
 import { UniversalAnnouncementData } from '../service/UniversalService';
 import * as Value from '../constants/trashValueConstants';
+import TrashValue from '../components/TrashValue';
 
 function Home({navigation}) {
 
@@ -36,14 +37,20 @@ function Home({navigation}) {
       <View style={styles.mainContentContainer} >
         <View>
           
-        <View style={{flexDirection: 'row'}}>
-          <View style={{alignItems: 'center', justifyContent: 'center', width: 55, backgroundColor: Theme.secondary, borderRadius: 15}} >
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row'}}>
+            <View style={{alignItems: 'center', justifyContent: 'center', width: 55, backgroundColor: Theme.secondary, borderRadius: 15}} >
             <FontAwesome5 name='bolt' size={24} color={Theme.text.primary} />
+            </View>
+            <View style={styles.recentActivities.textContainer}>
+
+            <Text style={styles.recentActivities.text}>Announcements</Text>
+            </View>
           </View>
-          <View style={styles.recentActivities.textContainer}>
-            
-          <Text style={styles.recentActivities.text}>Announcements</Text>
-          </View>
+          
+          
+          {userDataSnapshot.isAdmin ? <View><TouchableOpacity onPress={() => navigation.navigate("AdminAddAnnouncements")}><Ionicons name='add' size={48} color={Theme.text.primary} /></TouchableOpacity></View> : null}
+          
         </View>
         <View style={styles.recentActivities.container}>
           {announcementData?.map((item) =>
@@ -59,24 +66,23 @@ function Home({navigation}) {
         
         {/* Trash Directory */}
         <View>
-          <Text style={[styles.recentActivities.text, {textAlign: 'center', padding: 0, margin: 10}]}>Trash Values</Text>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: Theme.secondary, marginTop: 10, borderRadius: 15, flexDirection: 'row', padding: 10}} >
-              <FontAwesome5 name='bolt' size={24} color={Theme.text.primary} />
-              <Text style={{marginLeft: 10}}>Plastic</Text>
-            </View>
-            <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: Theme.secondary, marginTop: 10, borderRadius: 15, flexDirection: 'row', padding: 10}}>
-              <Text style={{color: Theme.text.primary, fontSize: 20, fontWeight: 'bold'}}>{Value.PLASTIC_MULTIPLIER}C/100G</Text>
-            </View>
+          <Text style={[styles.recentActivities.text, {padding: 0, marginVertical: 10, fontWeight: 'bold'}]}>Trash Values</Text>
+          <Text style={{color: Theme.text.primary, fontSize: 12, backgroundColor: Theme.form.background, padding: 5, borderRadius: 5}}>Trash values are based on it's type and weight per 100g</Text>
+          
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
+            {[
+              {id: 1, type: 'Paper', iconColor1: '#C0C0BE', iconColor2: '#DBDBDB', textColor: '#000', multiplier: Value.PAPER_MULTIPLIER},
+              {id: 2, type: 'Plastic', iconColor1: '#3EC965', iconColor2: '#ABF1B2', textColor: '#000', multiplier: Value.PLASTIC_MULTIPLIER},
+              {id: 3, type: 'Organic', iconColor1: '#92B4AB', iconColor2: '#D0EAEC', textColor: '#000', multiplier: Value.ORGANIC_MULTIPLIER},
+            
+            ].map((item) => { return <TrashValue key={item.id} type={item.type} iconColor1={item.iconColor1} iconColor2={item.iconColor2} textColor={item.textColor} multiplier={item.multiplier} /> })}
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: Theme.secondary, marginTop: 10, borderRadius: 15, flexDirection: 'row', padding: 10}} >
-              <FontAwesome5 name='bolt' size={24} color={Theme.text.primary} />
-              <Text style={{marginLeft: 10}}>Cardboard</Text>
-            </View>
-            <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: Theme.secondary, marginTop: 10, borderRadius: 15, flexDirection: 'row', padding: 10}}>
-              <Text style={{color: Theme.text.primary, fontSize: 20, fontWeight: 'bold'}}>{Value.CARDBOARD_MULTIPLIER}C/100G</Text>
-            </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
+            {[
+              {id: 1, type: 'Metal', iconColor1: '#DBBE58', iconColor2: '#F0A1A1', textColor: '#000', multiplier: Value.METAL_MULTIPLIER},
+              {id: 2, type: 'Cloth', iconColor1: '#B79005', iconColor2: '#FFE600', textColor: '#000', multiplier: Value.CLOTH_MULTIPLIER},
+              {id: 3, type: 'Cardboard', iconColor1: '#838383', iconColor2: '#FFCD1E', textColor: '#000', multiplier: Value.CARDBOARD_MULTIPLIER},
+            ].map((item) => { return <TrashValue key={item.id} type={item.type} iconColor1={item.iconColor1} iconColor2={item.iconColor2} textColor={item.textColor} multiplier={item.multiplier} /> })}
           </View>
         </View>
         
