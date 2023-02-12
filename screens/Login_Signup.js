@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 import { login } from '../service/LoginSignupService';
+import { signUp } from '../service/LoginSignupService';
 
 function Login_Signup( {navigation} ) {
     
@@ -31,7 +32,7 @@ function Login_Signup( {navigation} ) {
                         <TouchableOpacity onPress={() => toggleSignUp(!signUp)}><Text style={{color: 'blue'}}>Log In</Text></TouchableOpacity> 
                     </View>              
                 </View>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={() => {}}>
                     <Text style={{color:'white'}}>Sign Up</Text>
                 </TouchableOpacity>
             </View> 
