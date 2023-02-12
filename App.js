@@ -10,6 +10,7 @@ import CoinExchange from './screens/CoinExchange';
 import AdminUserTrashSubmission from './screens/AdminUserTrashSubmission';
 import RewardRequested from './screens/RewardRequested';
 import AdminAddAnnouncements from './screens/AdminAddAnnouncements';
+import AdminRequestCodeList from './screens/AdminRequestCodeList';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ export default function App() {
           <Stack.Screen name="RewardRequested" component={RewardRequested} />
           <Stack.Screen name="AdminUserTrashSubmission" component={AdminUserTrashSubmission} />
           <Stack.Screen name="AdminAddAnnouncements" component={AdminAddAnnouncements} />
+          <Stack.Screen name="AdminRequestCodeList" component={AdminRequestCodeList} />
         </Stack.Navigator>
       </NavigationContainer>
   );

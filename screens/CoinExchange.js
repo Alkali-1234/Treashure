@@ -39,6 +39,8 @@ const CoinExchange = ({navigation}) => {
           </TouchableOpacity>
       
         )}
+        {/* Show button when user is an admin */}
+        {userDataSnapshot.isAdmin ? <TouchableOpacity style={{backgroundColor: '#40ac74', padding: 10, borderRadius: 5, marginTop: 15}} onPress={() => navigation.navigate('AdminRequestCodeList')}><Text style={{textAlign: 'center', color: 'white', fontSize: 16}}>View Request Code List</Text></TouchableOpacity> : null}
         </View>
         <Modal
           animationType="fade"

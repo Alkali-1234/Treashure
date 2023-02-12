@@ -8,7 +8,7 @@ export let userDataSnapshot = {
     'coins': 100,
     'trash': 572,
     'joined': '1/1/2023',
-    'isAdmin': false,
+    'isAdmin': true,
 
 
 }

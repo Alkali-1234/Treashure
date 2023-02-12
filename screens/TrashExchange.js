@@ -6,7 +6,7 @@ import { UniversalTrashExchangeLocations } from '../service/UniversalService';
 import WebView from 'react-native-webview';
 import * as Clipboard from 'expo-clipboard';
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
-
+import { userDataSnapshot } from '../service/UserDataService';
 
 
 const TrashExchange = ({navigation}) => {
@@ -38,10 +38,10 @@ const TrashExchange = ({navigation}) => {
           <TouchableOpacity key={trashExchangeLocations.indexOf(item)} onPress={() => {setSelectedLocation(item); setShowLocationModal(true)}}>
             <ExchangeSpotCard address={item.address} district={item.district} link={item.link} />
           </TouchableOpacity>
-                    
         )}
+        {/* Show button when user is an admin */}
+        {userDataSnapshot.isAdmin ? <TouchableOpacity onPress={() => navigation.navigate('AdminUserTrashSubmission')} style={{marginTop: 10, justifyContent: 'center', alignItems: 'center', backgroundColor: "#40ac74", padding: 10, borderRadius: 5}}><Text style={{color: "white", fontSize: 16}}>View Admin Exchange Trash Screen</Text></TouchableOpacity> : null}
         </View>
-        {/* TODO: Finish modal */}
         <Modal
           animationType='fade'
           visible={showLocationModal}

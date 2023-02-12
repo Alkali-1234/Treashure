@@ -4,6 +4,7 @@ import { Ionicons, AntDesign } from 'react-native-vector-icons';
 import { Theme } from '../service/UniversalTheme'
 import { Dropdown } from 'react-native-element-dropdown';
 import * as Value from '../constants/trashValueConstants';
+import { handleTrashSubmission } from '../service/AdminPanelService';
 
 
 
@@ -60,7 +61,7 @@ const AdminUserTrashSubmission = () => {
 
                 <View>
                     {trashList?.map((item, index) => (
-                    <><View key={index} style={styles.trashTypeCardContainer}>
+                    <View key={index}><View key={index} style={styles.trashTypeCardContainer}>
                         <View style={styles.trashTypeCloseContainer}>
                             <TouchableOpacity onPress={() => deleteValue(index)}>
                                 <AntDesign name="closecircle" size={24} color="red" />
@@ -93,7 +94,7 @@ const AdminUserTrashSubmission = () => {
                         onChangeText={(value) => changeAmountValue(trashList.indexOf(item), value)}
                         />
 
-                    </View></>
+                    </View></View>
                     
                     ))}
 
@@ -148,7 +149,7 @@ const AdminUserTrashSubmission = () => {
                     </View>
                     <View style={styles.buttonsContainer}>
                         <TouchableOpacity style={[styles.button, {backgroundColor: "#40ac74"}]}>
-                            <Text style={styles.buttonText} onPress={() => {}}>Accept</Text>
+                            <Text style={styles.buttonText} onPress={() => {handleTrashSubmission(trashList)}}>Accept</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.button, {backgroundColor: "#e03444"}]} onPress={() => setShowConfirmTrashSubmissionModal(false)}>
                             <Text style={styles.buttonText}>Close</Text>
