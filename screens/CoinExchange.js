@@ -27,12 +27,16 @@ const CoinExchange = ({navigation}) => {
     <View style={styles.container}>
       <Text style={styles.exchangeSpotText}>Exchange Coin Catalogue</Text>
       <Text style={styles.subHeading}>Exchange your coins for items here!</Text>
-      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center',}}>
-        <FontAwesome5 name="coins" size={24} color="green" style={{marginTop: 10}} />
+      {!userDataSnapshot.isAdmin ? 
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 10}}>
+        <FontAwesome5 name="coins" size={24} color="green" />
         <Text style={{textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginLeft: 10}}>{userDataSnapshot.coins}</Text>
       </View>
       
-      <View style={{marginTop: 15}}>
+      : null}
+      
+      
+      <View>
         {coinExchangeCatalogue?.map((item, index) => 
           <TouchableOpacity key={index} onPress={() => {setShowItemModal(true); setSelectedItem(item)}}>
             <CoinExchangeCatalogueCard name={item.name} description={item.description} image={item.image} />

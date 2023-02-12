@@ -26,13 +26,25 @@ function Home({navigation}) {
         <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 30, marginTop: 15}}>
           <Image style={{height: 40, width: 40, borderRadius: 20}} source={{uri: userDataSnapshot.profilePictureLink}} />
           <Text style={styles.usernameText}>{userDataSnapshot.username}</Text>
+          {/* Admin Badge */}
+          {userDataSnapshot.isAdmin ? 
+          <View style={{backgroundColor: "darkred", borderRadius: 5, marginLeft: 10}}><Text style={{color: "white", fontWeight: 'bold', padding: 5}}>Admin</Text></View>
+
+          : null}
         </View>
+
+        {/* Coin and Trash display, show only for non-admins */}
+        {!userDataSnapshot.isAdmin ? 
+        
         <View style={{flexDirection: 'row', alignItems: 'center', marginRight: 30, marginTop: 15}}>
           <FontAwesome5 name='coins' size={24} color="yellow" />
           <Text style={styles.numValTopBar}>{userDataSnapshot.coins}</Text>
           <FontAwesome5 name='trash-alt' size={24} color={Theme.text.primary} style={{marginLeft: 15}} />
           <Text style={styles.numValTopBar}>{userDataSnapshot.trash}</Text>
         </View>
+        
+        : null}
+        
       </View>
       <View style={styles.mainContentContainer} >
         <View>
