@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -11,6 +11,7 @@ import AdminUserTrashSubmission from './screens/AdminUserTrashSubmission';
 import RewardRequested from './screens/RewardRequested';
 import AdminAddAnnouncements from './screens/AdminAddAnnouncements';
 import AdminRequestCodeList from './screens/AdminRequestCodeList';
+import { getApp } from 'firebase/app';
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -24,11 +25,14 @@ const firebaseConfig = {
   measurementId: "G-K17FQNSPM8"
 };
 
+
 initializeApp(firebaseConfig);
+
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+
 
 
   return (

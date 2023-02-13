@@ -8,11 +8,13 @@ function Login_Signup( {navigation} ) {
     //Login
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [returnMessage, setReturnMessage] = useState('');
     
 
     useEffect(() => {
         navigation.setOptions({headerShown: false})
     })
+    
 
     return (
         signUp? (
@@ -37,10 +39,11 @@ function Login_Signup( {navigation} ) {
                     }
 
                 }}>
-                    {message === ""? <Text style={{color:'white'}}>Sign Up</Text> : <Text>{message}</Text>}
+                    {returnMessage === ""? <Text style={{color:'white'}}>Sign Up</Text> : <Text style={{color: "white"}}>{returnMessage}</Text>}
                 </TouchableOpacity>
             </View> 
         ):(
+            // Sign In
             <View style={styles.container}>
                 <View style={styles.mainTitleContainer}>
                     <Text style={{fontSize: 30, marginBottom: 5}}>Treashures</Text>
@@ -55,9 +58,16 @@ function Login_Signup( {navigation} ) {
                     </View>
                                   
                 </View>
-                <TouchableOpacity style={styles.button} onPress={() => {if(login(username, password)){navigation.navigate("Main")}}}>
+                <TouchableOpacity style={styles.button} onPress={() => {
+                    login(username, password).then((res) => {
+                        setReturnMessage(res);
+                        navigation.navigate("Main");
+                    }).catch((err) => {
+                        setReturnMessage(err);
+                    })
+                }}>
                     
-                    {message === ""? <Text style={{color:'white'}}>Login</Text> : <Text>{message}</Text>}
+                    {returnMessage === ""? <Text style={{color:'white'}}>Login</Text> : <Text style={{color: "white"}}>{returnMessage}</Text>}
                 </TouchableOpacity>
             </View>  
         )
