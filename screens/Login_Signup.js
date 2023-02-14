@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {View, Text, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator} from 'react-native';
 import { login, signUp, message } from '../service/LoginSignupService';
+import { AntDesign, Feather } from '@expo/vector-icons';
 
 function Login_Signup( {navigation} ) {
     
@@ -61,19 +62,31 @@ function Login_Signup( {navigation} ) {
                                   
                 </View>
                 <TouchableOpacity style={[styles.button, {backgroundColor: buttonColor}]} onPress={() => {
+                    setIsLoading(true);
                     login(username, password).then((res) => {
+                        setIsLoading(false);
                         setReturnMessage(res);
                         setButtonColor('green');
-                        navigation.navigate("Main");
+                        setTimeout(() => {
+                            navigation.navigate("Main");
+                        }, 1000);
                     }).catch((err) => {
+                        setIsLoading(false);
                         setReturnMessage(err);
                         setButtonColor('red');
                     })
                 }}>
-                    {isLoading? <ActivityIndicator size="small" color="white" /> : 
-                    null
-                    }
-                    {returnMessage === ""? <Text style={{color:'white'}}>Login</Text> : <Text style={{color: "white"}}>{returnMessage}</Text>}
+                    {isLoading? <ActivityIndicator size="small" color="white" /> : null}
+                    {returnMessage === "" && isLoading === false? <Text style={{color:'white'}}>Login</Text> : null}
+                    {buttonColor === "red" && isLoading === false? 
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <AntDesign name="close" color="white" size={20} />
+                        <Text style={{color: "white", marginLeft: 5}}>{returnMessage}</Text>
+                    </View> : <></>}
+                    {buttonColor === "green" && isLoading === false? 
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Feather name="check" color="white" size={20} />
+                    </View> : <></>}
                 </TouchableOpacity>
             </View>  
         )

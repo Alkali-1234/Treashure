@@ -24,9 +24,8 @@ export async function login(email, password) {
       return;
     })
     .catch((error) => {
-      const errorCode = error.code;
       const errorMessage = error.message;
-      reject("Failed! " + errorMessage + " " + errorCode);
+      reject("Failed! " + errorMessage);
       return;
     });
     })

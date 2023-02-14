@@ -11,6 +11,7 @@ import AdminUserTrashSubmission from './screens/AdminUserTrashSubmission';
 import RewardRequested from './screens/RewardRequested';
 import AdminAddAnnouncements from './screens/AdminAddAnnouncements';
 import AdminRequestCodeList from './screens/AdminRequestCodeList';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getApp } from 'firebase/app';
 import { initializeApp } from "firebase/app";
 
