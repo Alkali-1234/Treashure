@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator} from 'react-native';
 import { login, signUp, message } from '../service/LoginSignupService';
 
 function Login_Signup( {navigation} ) {
@@ -9,6 +9,8 @@ function Login_Signup( {navigation} ) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [returnMessage, setReturnMessage] = useState('');
+    const [buttonColor, setButtonColor] = useState('#003EDD');
+    const [isLoading, setIsLoading] = useState(false);
     
 
     useEffect(() => {
@@ -58,15 +60,19 @@ function Login_Signup( {navigation} ) {
                     </View>
                                   
                 </View>
-                <TouchableOpacity style={styles.button} onPress={() => {
+                <TouchableOpacity style={[styles.button, {backgroundColor: buttonColor}]} onPress={() => {
                     login(username, password).then((res) => {
                         setReturnMessage(res);
+                        setButtonColor('green');
                         navigation.navigate("Main");
                     }).catch((err) => {
                         setReturnMessage(err);
+                        setButtonColor('red');
                     })
                 }}>
-                    
+                    {isLoading? <ActivityIndicator size="small" color="white" /> : 
+                    null
+                    }
                     {returnMessage === ""? <Text style={{color:'white'}}>Login</Text> : <Text style={{color: "white"}}>{returnMessage}</Text>}
                 </TouchableOpacity>
             </View>  
@@ -95,7 +101,6 @@ const styles = StyleSheet.create({
     button: {
         height: 40,
         width: 265,
-        backgroundColor: "#003EDD",
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,
