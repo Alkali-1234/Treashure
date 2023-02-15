@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {View, Text, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator} from 'react-native';
-import { login, signUp, message } from '../service/LoginSignupService';
+import { login, SignUp, message } from '../service/LoginSignupService';
 import { AntDesign, Feather } from '@expo/vector-icons';
 
 function Login_Signup( {navigation} ) {
@@ -12,6 +12,12 @@ function Login_Signup( {navigation} ) {
     const [returnMessage, setReturnMessage] = useState('');
     const [buttonColor, setButtonColor] = useState('#003EDD');
     const [isLoading, setIsLoading] = useState(false);
+    //SignUp
+    const [signUpUsername, setSignUpUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [signUpPassword, setSignUpPassword] = useState('');
+    const [signUpRetypePassword, setSignUpRetypePassword] = useState('');
+    
     
 
     useEffect(() => {
@@ -27,22 +33,45 @@ function Login_Signup( {navigation} ) {
                     <Text style={{color: '#756666', fontStyle: 'italic'}}>"Heaps of treasures lie among'st our trash"</Text>
                 </View>
                 <View style={{marginTop: 75}}>
-                    <TextInput style={styles.input} placeholder="Username" />
-                    <TextInput style={styles.input} placeholder="Email" />
-                    <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} />
-                    <TextInput style={styles.input} placeholder="Retype Password" secureTextEntry={true} />
+                    <TextInput style={styles.input} onChangeText={setSignUpUsername} placeholder="Username" />
+                    <TextInput style={styles.input} onChangeText={setEmail} placeholder="Email" />
+                    <TextInput style={styles.input} onChangeText={setSignUpPassword} placeholder="Password" secureTextEntry={true} />
+                    <TextInput style={styles.input} onChangeText={setSignUpRetypePassword} placeholder="Retype Password" secureTextEntry={true} />
                     <View style={{flexDirection: 'row'}}>
                         <Text style={{color: '#756666'}}>Already have an account? </Text>
                         <TouchableOpacity onPress={() => toggleSignUp(!signUp)}><Text style={{color: 'blue'}}>Log In</Text></TouchableOpacity> 
                     </View>              
                 </View>
-                <TouchableOpacity style={styles.button} onPress={() => {
-                    if(signUp(username, email, password)){
-                        navigation.navigate("Main")
-                    }
+                <TouchableOpacity style={[styles.button, {backgroundColor: buttonColor}]} onPress={() => {
+                    setIsLoading(true);
+                    SignUp(signUpUsername, email, signUpPassword, signUpRetypePassword).then((res) => {
+                        setIsLoading(false);
+                        setReturnMessage(res);
+                        setButtonColor('green');
+                        setTimeout(() => {
+                            toggleSignUp(!signUp);
+                            setButtonColor('#003EDD');
+                            setReturnMessage('');
+                        }, 1000);
+                    }).catch((err) => {
+                        setIsLoading(false);
+                        setReturnMessage(err);
+                        setButtonColor('red');
+                        console.log(err)
+                    })
 
                 }}>
-                    {returnMessage === ""? <Text style={{color:'white'}}>Sign Up</Text> : <Text style={{color: "white"}}>{returnMessage}</Text>}
+                    {isLoading? <ActivityIndicator size="small" color="white" /> : null}
+                    {returnMessage === "" && isLoading === false? <Text style={{color:'white'}}>Sign Up</Text> : null}
+                    {buttonColor === "red" && isLoading === false? 
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <AntDesign name="close" color="white" size={20} />
+                        <Text style={{color: "white", marginLeft: 5}}>{returnMessage}</Text>
+                    </View> : null}
+                    {buttonColor === "green" && isLoading === false? 
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Feather name="check" color="white" size={20} />
+                    </View> : null}
                 </TouchableOpacity>
             </View> 
         ):(
