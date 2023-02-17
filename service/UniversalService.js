@@ -1,24 +1,8 @@
-export let UniversalAnnouncementData = [
-    {
-      id: 1,
-      title: "New Arrivals!",
-      description: "Come check out these 3 new items: Red Beanie, Red Sweater, and a black-themed landyard. Get it before it's gone!",
-      image: "https://picsum.photos/200",
-      author: "Alkaline",
-      authorProfilePictureLink: "https://picsum.photos/200"
-  
-    },
-    {
-      id: 2,
-      title: "New Update!",
-      description: "Update 0.4.0 New update!",
-      image: "https://picsum.photos/200",
-      author: "Alkaline",
-      authorProfilePictureLink: "https://picsum.photos/200"
-  
-    }
-  ]
+import { getDatabase, ref, set, get, child } from "firebase/database";
 
+
+export let UniversalAnnouncementData;
+export let UniversalAnnouncementData2 = [];
 
 export let UniversalTrashExchangeLocations = [
     {
@@ -54,8 +38,22 @@ export let UniversalCoinExchangeCatalogue = [
 ]
 
 
-export const setAnnouncementData = (data) => {
-    UniversalAnnouncementData = data;
+export const getAnnouncementsData = async () => {
+    console.log("Getting announcements data")
+    // try {
+        const dbRef = ref(getDatabase());
+        
+        const snapshot = await get(child(dbRef, 'announcements/'))
+        if (snapshot.exists()) {
+            UniversalAnnouncementData = snapshot.val();
+            console.log("Console logged from Universal Service ", snapshot.val());
+            return snapshot.val();
+        } else {
+            return("Failed! No data available");
+        }
+    // } catch (error) {
+    //     console.log(error);
+    // }
 }
 
 export const setTrashExchangeLocationsData = (data) => {

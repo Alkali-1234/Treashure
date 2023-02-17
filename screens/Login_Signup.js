@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {View, Text, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator} from 'react-native';
-import { login, SignUp, message } from '../service/LoginSignupService';
+import { login, signUp, message } from '../service/LoginSignupService';
 import { AntDesign, Feather } from '@expo/vector-icons';
 
 function Login_Signup( {navigation} ) {
@@ -44,7 +44,7 @@ function Login_Signup( {navigation} ) {
                 </View>
                 <TouchableOpacity style={[styles.button, {backgroundColor: buttonColor}]} onPress={() => {
                     setIsLoading(true);
-                    SignUp(signUpUsername, email, signUpPassword, signUpRetypePassword).then((res) => {
+                    signUp(signUpUsername, email, signUpPassword, signUpRetypePassword).then((res) => {
                         setIsLoading(false);
                         setReturnMessage(res);
                         setButtonColor('green');

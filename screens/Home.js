@@ -8,17 +8,24 @@ import * as HomeService from '../service/HomeService';
 import { UniversalAnnouncementData } from '../service/UniversalService';
 import * as Value from '../constants/trashValueConstants';
 import TrashValue from '../components/TrashValue';
+import { getAnnouncementsData } from '../service/UniversalService';
 
 function Home({navigation}) {
 
   const [showSelectedItemModal, setShowSelectedItemModal] = useState(false);
-  const [announcementData, setAnnouncementData] = useState(null);
-
+  const [isLoadingAnnouncements, setIsLoadingAnnouncements] = useState(true);
+  const [announcementMessage, setAnnouncementMessage] = useState('Loading Announcements...');
+  const [announcementsData, setAnnouncementsData] = useState(null);
 
     useEffect(() => {
-      navigation.setOptions({headerShown: false})
-      setAnnouncementData(UniversalAnnouncementData);
-    })
+      navigation.setOptions({headerShown: false});
+      getData();
+    }, [])
+
+    const getData = async () => {
+      const data = await getAnnouncementsData();
+      setAnnouncementsData(data.filter((item) => item !== undefined));
+    }
 
   return (
     <View style={styles.container}>
@@ -65,7 +72,7 @@ function Home({navigation}) {
           
         </View>
         <View style={styles.recentActivities.container}>
-          {announcementData?.map((item) =>
+          {announcementsData?.map((item) =>
             <TouchableOpacity onPress={() => {
               setShowSelectedItemModal(true);
               HomeService.setAnnouncementSelectedItem(item);

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as firebase from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-
+import { getUserData } from "./UserDataService";
 
 
 export async function login(email, password) {
@@ -20,7 +20,12 @@ export async function login(email, password) {
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
-      resolve("Success! Signed in as " + user.email);
+      getUserData(user.uid).then((result) => {
+        console.log(result);
+        resolve("Success! Logged in as " + user.email);
+      }).catch((error) => {
+        reject("Failed! " + error);
+      })
       return;
     })
     .catch((error) => {
@@ -28,11 +33,13 @@ export async function login(email, password) {
       reject("Failed! " + errorMessage);
       return;
     });
+
+
     })
     return await LoginPromise;
 }
 
-export async function SignUp(username, email, password, retypePassword) {
+export async function signUp(username, email, password, retypePassword) {
 
   const auth = getAuth();
 
