@@ -1,3 +1,5 @@
+import { getFirestoreDocs } from './UniversalService';
+
 export let requestCodeList = [
     {
         'requestID': 1,
@@ -17,6 +19,16 @@ export let requestCodeList = [
     },
 ]
 
+export const getRequestCodes = async () => {
+    const getRequestCodesFromFirestore = await getFirestoreDocs('requestCodes');
+    const requestCodes = [];
+    getRequestCodesFromFirestore.forEach(item => {
+        const id = item.id;
+        requestCodes.push({id, ...item.data()});
+    });
+    return requestCodes;
+}
+
 export const handleAcceptItem = (item) => {
     console.log(item)
 }
@@ -29,6 +41,6 @@ export const addAnnouncement = (announcement) => {
     console.log(announcement)
 }
 
-export const handleTrashSubmission = (item) => {
-    console.log(item)
+export const handleTrashSubmission = (username, amount) => {
+    console.log(username, amount)
 }

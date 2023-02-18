@@ -17,15 +17,15 @@ export async function login(email, password) {
   }
 
     signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(async (userCredential) => {
       // Signed in 
       const user = userCredential.user;
-      getUserData(user.uid).then((result) => {
-        console.log(result);
+      const userDataResult = await getUserData(user.uid);
+      if(userDataResult === "No data found"){
+        reject("Failed! User data not found");
+      }else{
         resolve("Success! Logged in as " + user.email);
-      }).catch((error) => {
-        reject("Failed! " + error);
-      })
+      }
       return;
     })
     .catch((error) => {

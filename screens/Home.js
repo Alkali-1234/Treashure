@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, Image, Modal } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet, Image, Modal, ActivityIndicator, ScrollView } from 'react-native';
 import { Theme } from '../service/UniversalTheme';
 import { userDataSnapshot } from '../service/UserDataService';
 import AnnouncementCard from '../components/AnnouncementCard';
@@ -13,7 +13,7 @@ import { getAnnouncementsData } from '../service/UniversalService';
 function Home({navigation}) {
 
   const [showSelectedItemModal, setShowSelectedItemModal] = useState(false);
-  const [isLoadingAnnouncements, setIsLoadingAnnouncements] = useState(true);
+  const [isLoadingAnnouncements, setIsLoadingAnnouncements] = useState(false);
   const [announcementMessage, setAnnouncementMessage] = useState('Loading Announcements...');
   const [announcementsData, setAnnouncementsData] = useState(null);
 
@@ -23,8 +23,15 @@ function Home({navigation}) {
     }, [])
 
     const getData = async () => {
+      setIsLoadingAnnouncements(true);
       const data = await getAnnouncementsData();
+      if(typeof(data) === String){
+        setAnnouncementMessage(data);
+        setIsLoadingAnnouncements(false)
+        return;
+      }
       setAnnouncementsData(data.filter((item) => item !== undefined));
+      setIsLoadingAnnouncements(false);
     }
 
   return (
@@ -72,7 +79,13 @@ function Home({navigation}) {
           
         </View>
         <View style={styles.recentActivities.container}>
+          {isLoadingAnnouncements ? <ActivityIndicator size={24} color={Theme.text.primary} style={{marginTop: 15}} /> : null}
+          
+          
+
+          <ScrollView style={{width: "100%"}} contentContainerStyle={{alignItems: 'center'}}>
           {announcementsData?.map((item) =>
+            
             <TouchableOpacity onPress={() => {
               setShowSelectedItemModal(true);
               HomeService.setAnnouncementSelectedItem(item);
@@ -80,7 +93,9 @@ function Home({navigation}) {
               <AnnouncementCard key={item.id} title={item.title} description={item.description} imageLink={item.image} author={item.author} authorProfilePictureLink={item.authorProfilePictureLink} />
             </TouchableOpacity>
             
+            
           )}
+          </ScrollView>
         </View>
         
         {/* Trash Directory */}
@@ -199,6 +214,7 @@ const styles = StyleSheet.create({
       height: 250,
       backgroundColor: Theme.secondary,
       alignItems: 'center',
+      justifyContent: 'center',
     }
   },
   modalContainer: {

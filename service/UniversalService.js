@@ -1,4 +1,5 @@
 import { getDatabase, ref, set, get, child } from "firebase/database";
+import { getFirestore, getDocs, collection, getDoc, doc } from "firebase/firestore";
 
 
 export let UniversalAnnouncementData;
@@ -40,7 +41,7 @@ export let UniversalCoinExchangeCatalogue = [
 
 export const getAnnouncementsData = async () => {
     console.log("Getting announcements data")
-    // try {
+    try {
         const dbRef = ref(getDatabase());
         
         const snapshot = await get(child(dbRef, 'announcements/'))
@@ -51,9 +52,15 @@ export const getAnnouncementsData = async () => {
         } else {
             return("Failed! No data available");
         }
-    // } catch (error) {
-    //     console.log(error);
-    // }
+    } catch (error) {
+        return("Failed! " + error)
+    }
+}
+
+export const getFirestoreDocs = async (collectionName) => {
+    const db = getFirestore();
+    const querySnapshot = await getDocs(collection(db, collectionName));
+    return querySnapshot;
 }
 
 export const setTrashExchangeLocationsData = (data) => {

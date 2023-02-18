@@ -13,11 +13,14 @@ const AdminUserTrashSubmission = () => {
     const [latestID, setLatestID] = useState(1);
     const [username, setUsername] = useState('');
     const [showConfirmTrashSubmissionModal, setShowConfirmTrashSubmissionModal] = useState(false);
+    const [totalCoins, setTotalCoins] = useState(0);
 
     const initialValue = {
             id: 1,
+            name: "",
             type: 0,
-            amount: 0
+            amount: 0,
+            multiplier: 0,
         }
 
     const [trashList, setTrashList] = useState([
@@ -35,9 +38,11 @@ const AdminUserTrashSubmission = () => {
         setTrashList(newTrashList)
     }
 
-    const changeDropDownValue = (index, value) => {
+    const changeDropDownValue = (index, value, multiplier, name) => {
         const newTrashList = [...trashList];
         newTrashList[index].type = value;
+        newTrashList[index].multiplier = multiplier;
+        newTrashList[index].name = name;
         setTrashList(newTrashList);
     }
 
@@ -46,9 +51,15 @@ const AdminUserTrashSubmission = () => {
         newTrashList[index].amount = value;
         setTrashList(newTrashList);
     }
-
+    const calculateTotal = () => {
+        let total = 0;
+        trashList.forEach(item => {
+            total = total+(item.amount*item.multiplier);
+        });
+        setTotalCoins(total);
+    }
     const submitTrash = () => {
-        setShowConfirmTrashSubmissionModal(true);
+        handleTrashSubmission(username, totalCoins);
     }
 
   return (
@@ -69,12 +80,12 @@ const AdminUserTrashSubmission = () => {
                         </View>
                         <Dropdown
                             data={[
-                                {label: 'Plastic', value: 1},
-                                {label: 'Cardboard Paper', value: 2},
-                                {label: 'Paper', value: 3},
-                                {label: 'Organic', value: 4},
-                                {label: 'Metal', value: 5},
-                                {label: 'Cloth', value: 6}
+                                {label: 'Paper', value: 1, multiplier: Value.PAPER_MULTIPLIER},
+                                {label: 'Plastic', value: 2, multiplier: Value.PLASTIC_MULTIPLIER},
+                                {label: 'Organic', value: 3, multiplier: Value.ORGANIC_MULTIPLIER},
+                                {label: 'Metal', value: 4, multiplier: Value.METAL_MULTIPLIER},
+                                {label: 'Cloth', value: 5, multiplier: Value.CLOTH_MULTIPLIER},
+                                {label: 'Cardboard', value: 6, multiplier: Value.CARDBOARD_MULTIPLIER},
                             ]}
                             labelField="label"
                             valueField="value"
@@ -84,7 +95,7 @@ const AdminUserTrashSubmission = () => {
                                 color: Theme.text.secondary,
                                 fontSize: 16
                             }}
-                            onChange={(value) => {changeDropDownValue(trashList.indexOf(item), value.value)}}
+                            onChange={(value) => {changeDropDownValue(trashList.indexOf(item), value.value, value.multiplier, value.label)}}
                             value={trashList[trashList.indexOf(item)].type}
                         />
                         <TextInput placeholder='Amount'
@@ -104,7 +115,7 @@ const AdminUserTrashSubmission = () => {
                             <Ionicons name="add-circle" size={48} color={Theme.text.secondary} /> 
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity onPress={() => submitTrash()}>
+                    <TouchableOpacity onPress={() => {setShowConfirmTrashSubmissionModal(true); calculateTotal()}}>
                         <View style={styles.submitContainer}>
                             <Text style={styles.submitText}>Submit</Text>
                         </View> 
@@ -134,22 +145,22 @@ const AdminUserTrashSubmission = () => {
                             <ScrollView style={{width: "100%", height: 100}}>
                             {trashList.map((item, index) => (
                                 <View key={index} style={styles.acceptTrashDirectoryContainer}>
-                                    <Text style={styles.acceptTrashDirectoryText}>Plastic : 300 x 5/100G</Text>
-                                    <Text style={styles.acceptTrashDirectoryTextAmount}>1500</Text>
+                                    <Text style={styles.acceptTrashDirectoryText}>{item.name} : {item.amount} x {item.multiplier}/100G</Text>
+                                    <Text style={styles.acceptTrashDirectoryTextAmount}>{item.amount * item.multiplier}</Text>
                                 </View>
                             ))}
                             </ScrollView>
                         
                         <View style={styles.totalCoinContainer}>
                             <Text>Total Coins: </Text>
-                            <Text>12000</Text>
+                            <Text>{totalCoins}</Text>
                         </View>
                         
                     </View>
                     </View>
                     <View style={styles.buttonsContainer}>
                         <TouchableOpacity style={[styles.button, {backgroundColor: "#40ac74"}]}>
-                            <Text style={styles.buttonText} onPress={() => {handleTrashSubmission(trashList)}}>Accept</Text>
+                            <Text style={styles.buttonText} onPress={() => {submitTrash()}}>Accept</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.button, {backgroundColor: "#e03444"}]} onPress={() => setShowConfirmTrashSubmissionModal(false)}>
                             <Text style={styles.buttonText}>Close</Text>

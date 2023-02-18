@@ -1,4 +1,4 @@
-import { getDatabase, ref, set, get, child } from "firebase/database";
+import { getFirestore, getDoc, doc } from "firebase/firestore";
 
 
 //Placeholder data
@@ -17,21 +17,14 @@ export let userDataSnapshot = {
 
 export const getUserData = async (uuid) => {
     //Pull data from firebase
-    const getDatabasePromise = new Promise(async (resolve, reject) => {
-
-    const dbRef = ref(getDatabase());
-    get(child(dbRef, 'users/' + uuid)).then((snapshot) => {
-        
-        if (snapshot.exists()) {
-            userDataSnapshot = snapshot.val();
-            resolve("Success! Pulled user data");
-        } else {
-            reject("Failed! No data available");
-        }
-    }).catch((error) => {
-        reject("Failed! " + error);
-    });
-    })
-
-    return await getDatabasePromise;
+    console.log("Getting user data...")
+    const db = getFirestore();
+    const dataSnapshot = await getDoc(doc(db, 'users/', uuid));
+    if(dataSnapshot.empty){
+        return("No data found");
+    }else{
+        userDataSnapshot = dataSnapshot.data();
+        console.log(dataSnapshot.data());
+        return(dataSnapshot.data());
+    }
 }

@@ -1,16 +1,39 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
+import React, {useEffect, useState} from 'react'
 import { Theme } from '../service/UniversalTheme';
-import { requestCodeList } from '../service/AdminPanelService';
 import RequestCodeItem from '../components/RequestCodeItem';
+import { getRequestCodes } from '../service/AdminPanelService';
+
 
 const AdminRequestCodeList = () => {
+    const [requestCodeList, setRequestCodeList] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+      getCodes();
+    }, [])
+
+    const getCodes = async () => {
+        try {
+            const codes = await getRequestCodes()
+            setRequestCodeList(codes);
+        } catch (error) {
+            alert(error)
+        } finally {
+            setIsLoading(false);
+        }
+        
+        
+    }
+    
+
   return (
     <View style={styles.container}>
         <Text style={styles.header}>Search Request Code</Text>
         <View style={styles.listContainer}>
+            {isLoading ? <ActivityIndicator size="large" color={Theme.text.primary} animating={isLoading} /> : null}
             {requestCodeList.map((item) => (
-                <RequestCodeItem key={item.requestID} item={item} />
+                <RequestCodeItem key={item.id} item={item} />
             ))}
         </View>
     </View>
