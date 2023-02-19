@@ -5,7 +5,7 @@ import { AntDesign, Feather } from '@expo/vector-icons';
 
 function Login_Signup( {navigation} ) {
     
-    const [signUp, toggleSignUp] = useState(false);
+    const [showSignUp, toggleSignUp] = useState(false);
     //Login
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -26,7 +26,7 @@ function Login_Signup( {navigation} ) {
     
 
     return (
-        signUp? (
+        showSignUp? (
             <View style={styles.container}>
                 <View style={styles.mainTitleContainer}>
                     <Text style={{fontSize: 30, marginBottom: 5}}>Treashures</Text>
@@ -39,7 +39,7 @@ function Login_Signup( {navigation} ) {
                     <TextInput style={styles.input} onChangeText={setSignUpRetypePassword} placeholder="Retype Password" secureTextEntry={true} />
                     <View style={{flexDirection: 'row'}}>
                         <Text style={{color: '#756666'}}>Already have an account? </Text>
-                        <TouchableOpacity onPress={() => toggleSignUp(!signUp)}><Text style={{color: 'blue'}}>Log In</Text></TouchableOpacity> 
+                        <TouchableOpacity onPress={() => toggleSignUp(!showSignUp)}><Text style={{color: 'blue'}}>Log In</Text></TouchableOpacity> 
                     </View>              
                 </View>
                 <TouchableOpacity style={[styles.button, {backgroundColor: buttonColor}]} onPress={() => {
@@ -49,7 +49,7 @@ function Login_Signup( {navigation} ) {
                         setReturnMessage(res);
                         setButtonColor('green');
                         setTimeout(() => {
-                            toggleSignUp(!signUp);
+                            toggleSignUp(!showSignUp);
                             setButtonColor('#003EDD');
                             setReturnMessage('');
                         }, 1000);
@@ -86,7 +86,7 @@ function Login_Signup( {navigation} ) {
                     <TextInput style={[styles.input, {marginTop:62}]} placeholder="Password" onChangeText={setPassword} secureTextEntry={true} />
                     <View style={{flexDirection: 'row'}}>
                         <Text style={{color: '#756666'}}>Dont have an account? </Text>
-                        <TouchableOpacity onPress={() => toggleSignUp(!signUp)}><Text style={{color: 'blue'}}>Sign Up!</Text></TouchableOpacity> 
+                        <TouchableOpacity onPress={() => toggleSignUp(!showSignUp)}><Text style={{color: 'blue'}}>Sign Up!</Text></TouchableOpacity> 
                     </View>
                                   
                 </View>

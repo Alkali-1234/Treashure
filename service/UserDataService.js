@@ -1,4 +1,4 @@
-import { getFirestore, getDoc, doc } from "firebase/firestore";
+import { getFirestore, getDoc, doc, setDoc, Timestamp } from "firebase/firestore";
 
 
 //Placeholder data
@@ -27,4 +27,20 @@ export const getUserData = async (uuid) => {
         console.log(dataSnapshot.data());
         return(dataSnapshot.data());
     }
+}
+
+export const initializeUserData = async (uuid, _username, _email, _profilePictureLink) => {
+    console.log("Initializing user data...");
+    const db = getFirestore();
+    await setDoc(doc(db, "users", uuid), {
+        username: _username,
+        email: _email,
+        profilePictureLink: _profilePictureLink,
+        coins: 0,
+        trash: 0,
+        joined: Timestamp.now(),
+        isAdmin: false
+    });
+    console.log("Initialized user data!")
+    return true;
 }
