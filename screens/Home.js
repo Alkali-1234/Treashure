@@ -9,6 +9,7 @@ import { UniversalAnnouncementData } from '../service/UniversalService';
 import * as Value from '../constants/trashValueConstants';
 import TrashValue from '../components/TrashValue';
 import { getAnnouncementsData } from '../service/UniversalService';
+import { deleteAnnouncement } from '../service/AdminPanelService';
 
 function Home({navigation}) {
 
@@ -16,11 +17,12 @@ function Home({navigation}) {
   const [isLoadingAnnouncements, setIsLoadingAnnouncements] = useState(false);
   const [announcementMessage, setAnnouncementMessage] = useState('Loading Announcements...');
   const [announcementsData, setAnnouncementsData] = useState(null);
+  const [reloadAnnouncements, setReloadAnnouncements] = useState(false);
 
     useEffect(() => {
       navigation.setOptions({headerShown: false});
       getData();
-    }, [])
+    }, [reloadAnnouncements])
 
     const getData = async () => {
       setIsLoadingAnnouncements(true);
@@ -28,10 +30,12 @@ function Home({navigation}) {
       if(typeof(data) === String){
         setAnnouncementMessage(data);
         setIsLoadingAnnouncements(false)
-        return;
+        return false;
       }
       setAnnouncementsData(data.filter((item) => item !== undefined));
       setIsLoadingAnnouncements(false);
+      setReloadAnnouncements(false);
+      return true;
     }
 
   return (
@@ -142,14 +146,18 @@ function Home({navigation}) {
       >
         <View style={styles.modalContainer}>
             <View style={styles.modalMainContent}>
-              <View style={{height: "90%", width: "100%"}}>
+              <View style={{height: "80%", width: "100%"}}>
                 <Image source={{uri: HomeService.announcementCurrentSelectedItem?.image}} style={styles.modalImage} />
                 <View style={styles.modalTopContentContainer}>
                   <Text style={styles.modalTitle}>{HomeService.announcementCurrentSelectedItem?.title}</Text>
                   <Text style={styles.modalDescription}>{HomeService.announcementCurrentSelectedItem?.description}</Text>
                 </View>
               </View>
-              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View>
+                <TouchableOpacity style={{margin: 10, padding: 10, backgroundColor: "red", borderRadius: 5}} onPress={async () => {await deleteAnnouncement(HomeService.announcementCurrentSelectedItem.id); setReloadAnnouncements(true)}}>
+                  <Text style={{color: "white", textAlign: 'center'}}>Delete Announcement</Text>
+                </TouchableOpacity>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View style={styles.modalFooter}>
                 <Image source={{uri: HomeService.announcementCurrentSelectedItem?.authorProfilePictureLink}} style={styles.modalFooterImage} />
                 <Text style={styles.footerText}>{HomeService.announcementCurrentSelectedItem?.author}</Text>
@@ -161,6 +169,8 @@ function Home({navigation}) {
                   
                 </View>
               </View>
+              </View>
+              
               
             </View>
         </View>

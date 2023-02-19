@@ -29,13 +29,13 @@ export const getUserData = async (uuid) => {
     }
 }
 
-export const initializeUserData = async (uuid, _username, _email, _profilePictureLink) => {
+export const initializeUserData = async (uuid, username, email, profilePictureLink) => {
     console.log("Initializing user data...");
     const db = getFirestore();
     await setDoc(doc(db, "users", uuid), {
-        username: _username,
-        email: _email,
-        profilePictureLink: _profilePictureLink,
+        username,
+        email,
+        profilePictureLink,
         coins: 0,
         trash: 0,
         joined: Timestamp.now(),

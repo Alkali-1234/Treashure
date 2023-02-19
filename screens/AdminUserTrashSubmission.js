@@ -9,11 +9,12 @@ import { handleTrashSubmission } from '../service/AdminPanelService';
 
 
 
-const AdminUserTrashSubmission = () => {
+const AdminUserTrashSubmission = ({navigation}) => {
     const [latestID, setLatestID] = useState(1);
     const [username, setUsername] = useState('');
     const [showConfirmTrashSubmissionModal, setShowConfirmTrashSubmissionModal] = useState(false);
     const [totalCoins, setTotalCoins] = useState(0);
+    const [totalTrash, setTotalTrash] = useState(0);
 
     const initialValue = {
             id: 1,
@@ -48,18 +49,24 @@ const AdminUserTrashSubmission = () => {
 
     const changeAmountValue = (index, value) => {
         const newTrashList = [...trashList];
-        newTrashList[index].amount = value;
+        newTrashList[index].amount = parseInt(value);
         setTrashList(newTrashList);
     }
     const calculateTotal = () => {
         let total = 0;
+        let totalTrash = 0;
         trashList.forEach(item => {
             total = total+(item.amount*item.multiplier);
+            totalTrash+=item.amount;
         });
         setTotalCoins(total);
+        setTotalTrash(totalTrash);
     }
-    const submitTrash = () => {
-        handleTrashSubmission(username, totalCoins);
+    const submitTrash = async () => {
+        const result = await handleTrashSubmission(username, totalCoins, totalTrash);
+        if(result){
+            navigation.navigate("Home")
+        }
     }
 
   return (

@@ -1,5 +1,5 @@
 import { getDatabase, ref, set, get, child } from "firebase/database";
-import { getFirestore, getDocs, collection, getDoc, doc } from "firebase/firestore";
+import { getFirestore, getDocs, collection, getDoc, doc, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 
 
 export let UniversalAnnouncementData;
@@ -40,27 +40,42 @@ export let UniversalCoinExchangeCatalogue = [
 
 
 export const getAnnouncementsData = async () => {
-    console.log("Getting announcements data")
-    try {
-        const dbRef = ref(getDatabase());
-        
-        const snapshot = await get(child(dbRef, 'announcements/'))
-        if (snapshot.exists()) {
-            UniversalAnnouncementData = snapshot.val();
-            console.log("Console logged from Universal Service ", snapshot.val());
-            return snapshot.val();
-        } else {
-            return("Failed! No data available");
-        }
-    } catch (error) {
-        return("Failed! " + error)
-    }
+    console.log("Getting announcements data");
+    const announcementsData = [];
+    const querySnapshot = await getFirestoreDocs("announcements");
+    querySnapshot.forEach((doc) => {
+        const id = doc.id;
+        announcementsData.push({id, ...doc.data()});
+    });
+    return announcementsData;
 }
+
 
 export const getFirestoreDocs = async (collectionName) => {
     const db = getFirestore();
     const querySnapshot = await getDocs(collection(db, collectionName));
     return querySnapshot;
+}
+
+export const addFirestoreDoc = async (collectionName, data) => {
+    console.log("Adding firestore doc...", data);
+    const db = getFirestore();
+    const addDocReturn = await addDoc(collection(db, collectionName), data);
+    console.log("Firestore doc added with id: ", addDocReturn.id);
+    return true;
+}
+
+export const deleteFirestoreDoc = async (collectionName, docId) => {
+    console.log("Deleting firestore doc...", docId);
+    const db = getFirestore();
+    await deleteDoc(doc(db, collectionName, docId));
+}
+
+export const updateFirestoreDoc = async (collectionName, docId, data) => {
+    console.log("Updating firestore doc...", docId);
+    const db = getFirestore();
+    await updateDoc(doc(db, collectionName, docId), data);
+    return true;
 }
 
 export const setTrashExchangeLocationsData = (data) => {
