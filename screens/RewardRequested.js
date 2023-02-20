@@ -1,13 +1,38 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Theme } from '../service/UniversalTheme';
+import { userDataSnapshot } from '../service/UserDataService';
+import { deleteFirestoreDoc, requestItem } from '../service/UniversalService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RewardRequested = ({route, navigation}) => {
+    const [requestCode, setRequestCode] = useState('Loading Request Code...');
+
     const {item} = route.params;
-    const {requestCode} = route.params;
+    
+
     useEffect(() => {
         navigation.setOptions({headerShown: false});
+        handleRequest();
     }, [])
+
+
+    //TODO If there is a request code pending, disable the touchable opacity.
+
+    const handleRequest = async () => {
+        const userAuthData = JSON.parse(await AsyncStorage.getItem("user"));
+
+        console.log(userAuthData);
+        const code = await requestItem(userAuthData["uid"], item.cost, item.name, userDataSnapshot.username, userDataSnapshot.email);
+        setRequestCode(code);
+    }
+
+    const handleCancel = async () => {
+        await deleteFirestoreDoc('requestCodes', requestCode);
+        console.log("Canceled!")
+        navigation.navigate('CoinExchange');
+    }
+
     return (
         <View style={{backgroundColor: Theme.primary, height: "100%", width: "100%", padding: 20, paddingTop: 50, justifyContent: 'space-between'}}>
             <View>
@@ -26,7 +51,7 @@ const RewardRequested = ({route, navigation}) => {
             </View>
             <View>
                 <TouchableOpacity style={{backgroundColor: '#40ac74', padding: 10, borderRadius: 5, marginTop: 10}} onPress={() => navigation.navigate('Home')}><Text style={{color: 'white', textAlign:'center'}}>Back to Home</Text></TouchableOpacity>
-                <TouchableOpacity style={{backgroundColor: '#e74c3c', padding: 10, borderRadius: 5, marginTop: 10}} onPress={() => navigation.navigate('CoinExchange')}><Text style={{color: 'white', textAlign:'center'}}>Cancel Request</Text></TouchableOpacity>
+                <TouchableOpacity style={{backgroundColor: '#e74c3c', padding: 10, borderRadius: 5, marginTop: 10}} disabled={requestCode === "Loading Request Code..."} onPress={() => handleCancel()}><Text style={{color: 'white', textAlign:'center'}}>Cancel Request</Text></TouchableOpacity>
             </View>
             
         </View>

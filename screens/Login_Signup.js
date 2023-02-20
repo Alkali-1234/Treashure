@@ -90,7 +90,7 @@ function Login_Signup( {navigation} ) {
                     </View>
                                   
                 </View>
-                <TouchableOpacity style={[styles.button, {backgroundColor: buttonColor}]} onPress={() => {
+                <TouchableOpacity style={[styles.button, {backgroundColor: buttonColor}]} disabled={isLoading} onPress={() => {
                     setIsLoading(true);
                     login(username, password).then((res) => {
                         setIsLoading(false);

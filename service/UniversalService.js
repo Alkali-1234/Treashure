@@ -57,12 +57,20 @@ export const getFirestoreDocs = async (collectionName) => {
     return querySnapshot;
 }
 
+export const getFirestoreDoc = async (collectionName, docId) => {
+    console.log("Getting firestore doc...", docId);
+    const db = getFirestore();
+    const docRef = doc(db, collectionName, docId);
+    const docSnap = await getDoc(docRef);
+    return docSnap.data();
+}
+
 export const addFirestoreDoc = async (collectionName, data) => {
     console.log("Adding firestore doc...", data);
     const db = getFirestore();
     const addDocReturn = await addDoc(collection(db, collectionName), data);
     console.log("Firestore doc added with id: ", addDocReturn.id);
-    return true;
+    return addDocReturn.id;
 }
 
 export const deleteFirestoreDoc = async (collectionName, docId) => {
@@ -76,6 +84,21 @@ export const updateFirestoreDoc = async (collectionName, docId, data) => {
     const db = getFirestore();
     await updateDoc(doc(db, collectionName, docId), data);
     return true;
+}
+
+export const requestItem = async (uid, cost, item, requester, requesterEmail) => {
+    console.log("Requesting item...", uid, cost, item, requester, requesterEmail);
+    const doc = await addFirestoreDoc("requestCodes", {
+        uid,
+        cost,
+        item,
+        requester,
+        requesterEmail,
+    });
+    await updateFirestoreDoc("requestCodes", doc, {
+        code: doc
+    });
+    return doc;
 }
 
 export const setTrashExchangeLocationsData = (data) => {

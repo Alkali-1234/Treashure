@@ -1,4 +1,4 @@
-import { addFirestoreDoc, deleteFirestoreDoc, getFirestoreDocs, updateFirestoreDoc } from './UniversalService';
+import { addFirestoreDoc, deleteFirestoreDoc, getFirestoreDoc, getFirestoreDocs, updateFirestoreDoc } from './UniversalService';
 import { where, collection, query, getDocs, getFirestore, updateDoc, doc } from 'firebase/firestore';
 import { userDataSnapshot } from './UserDataService';
 
@@ -31,15 +31,30 @@ export const getRequestCodes = async () => {
     return requestCodes;
 }
 
-export const handleAcceptItem = (item) => {
-    console.log(item)
-    // const ref = collections(db, "users");
-    // const usernameQueryRef = query(ref, where("username", "==", username));
-    // const docSnap = getDoc(usernameQueryRef);
+export const handleAcceptItem = async (item) => {
+    console.log("Accepting request...", item.item);
+    try {
+        const doc = await getFirestoreDoc("users", item.item.uid);
+        const coins = doc.coins;
+        if(coins < item.item.cost) {
+            alert("User does not have enough coins!");
+            return;
+        } else {
+            await updateFirestoreDoc("users", item.item.uid, {
+                coins: coins - item.item.cost
+            });
+
+            await deleteFirestoreDoc("requestCodes", item.item.id);
+        }
+    } catch (error) {
+        alert(error)
+    }
 }
 
-export const handleRejectItem = (item) => {
-    console.log(item)
+export const handleRejectItem = async (item) => {
+    console.log("Rejecting request...", item.item);
+    await deleteFirestoreDoc("requestCodes", item.id);
+    return true;
 }
 
 export const addAnnouncement = async (announcement) => {

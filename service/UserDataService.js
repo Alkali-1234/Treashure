@@ -11,7 +11,9 @@ export let userDataSnapshot = {
     'trash': 0,
     'joined': '1/1/2023',
     'isAdmin': false,
+}
 
+export let userAuthenticationSnapshot = {
 
 }
 

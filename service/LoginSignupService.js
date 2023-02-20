@@ -20,6 +20,7 @@ export async function login(email, password) {
     .then(async (userCredential) => {
       // Signed in 
       const user = userCredential.user;
+      AsyncStorage.setItem("user", JSON.stringify(user));
       const userDataResult = await getUserData(user.uid);
       if(userDataResult === "No data found"){
         reject("Failed! User data not found");
@@ -30,6 +31,7 @@ export async function login(email, password) {
     })
     .catch((error) => {
       const errorMessage = error.message;
+      console.log(errorMessage)
       reject("Failed! " + errorMessage);
       return;
     });

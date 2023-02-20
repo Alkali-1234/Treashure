@@ -10,6 +10,7 @@ const CoinExchange = ({navigation}) => {
   const [coinExchangeCatalogue, setCoinExchangeCatalogue] = useState(null);
   const [showItemModal, setShowItemModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  
   useEffect(() => {
     setCoinExchangeCatalogue(UniversalCoinExchangeCatalogue);
   }, [])
@@ -18,7 +19,7 @@ const CoinExchange = ({navigation}) => {
     setShowItemModal(false);
     
     setTimeout(() => {
-    navigation.navigate('RewardRequested', {item: selectedItem, requestCode: 'd3f4g5h6j7k8l9'});
+    navigation.navigate('RewardRequested', {item: selectedItem});
     }, 100);
   }
   

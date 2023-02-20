@@ -4,21 +4,40 @@ import { Theme } from '../service/UniversalTheme'
 import { Ionicons } from 'react-native-vector-icons';
 import { handleAcceptItem, handleRejectItem } from '../service/AdminPanelService';
 
-const RequestCodeItem = (item) => {
+const RequestCodeItem = ({item, getCodes}) => {
+
+  const onHandleAcceptItem = async (item) => {
+    try {
+      await handleAcceptItem(item);
+      await getCodes();
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  const onHandleRejectItem = async (item) => {
+    try {
+      await handleRejectItem(item);
+      await getCodes();
+    } catch (error) {
+      alert(error)
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={{justifyContent: 'space-evenly', width: "50%"}}>
-        <Text style={{color: Theme.text.primary, fontSize: 16, fontWeight: 'bold'}}>{item.item.item}</Text>
-        <Text style={{color: Theme.text.primary}}>{item.item.requester}</Text>
-        <Text style={{color: Theme.text.primary}}>Request code: <Text style={{fontWeight: 'bold'}}>{item.item.code}</Text></Text>
+        <Text style={{color: Theme.text.primary, fontSize: 16, fontWeight: 'bold'}}>{item.item}</Text>
+        <Text style={{color: Theme.text.primary}}>{item.requester}</Text>
+        <Text style={{color: Theme.text.primary}}>Request code: <Text style={{fontWeight: 'bold'}}>{item.code}</Text></Text>
       </View>
       <View style={styles.acceptRejectContainer}>
-        <TouchableOpacity style={styles.acceptButton} onPress={() => handleAcceptItem(item)}>
+        <TouchableOpacity style={styles.acceptButton} onPress={() => onHandleAcceptItem(item)}>
             <View style={{backgroundColor: '#40ac74', width: 36, height: 36, borderRadius: 2, justifyContent: 'center', alignItems:  'center'}}>
                 <Ionicons name="checkmark" size={24} color="#000" />
             </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleRejectItem(item)}>
+        <TouchableOpacity onPress={() => onHandleRejectItem(item)}>
         <View style={{backgroundColor: '#e74c3c', width: 36, height: 36, borderRadius: 2, justifyContent: 'center', alignItems:  'center'}}>
                 <Ionicons name="close" size={24} color="white" />
         </View>

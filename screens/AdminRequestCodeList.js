@@ -33,7 +33,7 @@ const AdminRequestCodeList = () => {
         <View style={styles.listContainer}>
             {isLoading ? <ActivityIndicator size="large" color={Theme.text.primary} animating={isLoading} /> : null}
             {requestCodeList.map((item) => (
-                <RequestCodeItem key={item.id} item={item} />
+                <RequestCodeItem key={item.id} item={item} getCodes={getCodes} />
             ))}
         </View>
     </View>
