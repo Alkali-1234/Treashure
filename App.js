@@ -23,7 +23,8 @@ const firebaseConfig = {
   storageBucket: "treashure-c61c6.appspot.com",
   messagingSenderId: "266595362378",
   appId: "1:266595362378:web:96a5a6e422f52893a668b3",
-  measurementId: "G-K17FQNSPM8"
+  measurementId: "G-K17FQNSPM8",
+  storageBucket: "gs://treashure-c61c6.appspot.com"
 };
 
 

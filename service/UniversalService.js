@@ -1,7 +1,6 @@
 import { getDatabase, ref, set, get, child } from "firebase/database";
 import { getFirestore, getDocs, collection, getDoc, doc, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 
-
 export let UniversalAnnouncementData;
 export let UniversalAnnouncementData2 = [];
 
@@ -100,6 +99,8 @@ export const requestItem = async (uid, cost, item, requester, requesterEmail) =>
     });
     return doc;
 }
+
+
 
 export const setTrashExchangeLocationsData = (data) => {
     UniversalTrashExchangeLocations = data;

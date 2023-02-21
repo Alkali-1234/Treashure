@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet, Image, Modal, ActivityIndicator, ScrollView } from 'react-native';
 import { Theme } from '../service/UniversalTheme';
-import { userDataSnapshot } from '../service/UserDataService';
+import * as UserDataService from '../service/UserDataService';
 import AnnouncementCard from '../components/AnnouncementCard';
 import { FontAwesome5, Ionicons, AntDesign } from 'react-native-vector-icons'
 import * as HomeService from '../service/HomeService';
@@ -18,6 +18,10 @@ function Home({navigation}) {
   const [announcementMessage, setAnnouncementMessage] = useState('Loading Announcements...');
   const [announcementsData, setAnnouncementsData] = useState(null);
   const [reloadAnnouncements, setReloadAnnouncements] = useState(false);
+  const [userDataSnapshot, setUserDataSnapshot] = useState(null);
+    useEffect(() => {
+      setUserDataSnapshot(UserDataService.userDataSnapshot);
+    }, [UserDataService.userDataSnapshot])
 
     useEffect(() => {
       navigation.setOptions({headerShown: false});
@@ -42,23 +46,23 @@ function Home({navigation}) {
     <View style={styles.container}>
       <View style={styles.topBar}>
         <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 30, marginTop: 15}}>
-          <Image style={{height: 40, width: 40, borderRadius: 20}} source={{uri: userDataSnapshot.profilePictureLink}} />
-          <Text style={styles.usernameText}>{userDataSnapshot.username}</Text>
+          <Image style={{height: 40, width: 40, borderRadius: 20}} source={{uri: userDataSnapshot?.profilePictureLink}} />
+          <Text style={styles.usernameText}>{userDataSnapshot?.username}</Text>
           {/* Admin Badge */}
-          {userDataSnapshot.isAdmin ? 
+          {userDataSnapshot?.isAdmin ? 
           <View style={{backgroundColor: "darkred", borderRadius: 5, marginLeft: 10}}><Text style={{color: "white", fontWeight: 'bold', padding: 5}}>Admin</Text></View>
 
           : null}
         </View>
 
         {/* Coin and Trash display, show only for non-admins */}
-        {!userDataSnapshot.isAdmin ? 
+        {!userDataSnapshot?.isAdmin ? 
         
         <View style={{flexDirection: 'row', alignItems: 'center', marginRight: 30, marginTop: 15}}>
           <FontAwesome5 name='coins' size={24} color="yellow" />
-          <Text style={styles.numValTopBar}>{userDataSnapshot.coins}</Text>
+          <Text style={styles.numValTopBar}>{userDataSnapshot?.coins}</Text>
           <FontAwesome5 name='trash-alt' size={24} color={Theme.text.primary} style={{marginLeft: 15}} />
-          <Text style={styles.numValTopBar}>{userDataSnapshot.trash}</Text>
+          <Text style={styles.numValTopBar}>{userDataSnapshot?.trash}</Text>
         </View>
         
         : null}
@@ -79,7 +83,7 @@ function Home({navigation}) {
           </View>
           
           
-          {userDataSnapshot.isAdmin ? <View><TouchableOpacity onPress={() => navigation.navigate("AdminAddAnnouncements")}><Ionicons name='add' size={48} color={Theme.text.primary} /></TouchableOpacity></View> : null}
+          {userDataSnapshot?.isAdmin ? <View><TouchableOpacity onPress={() => navigation.navigate("AdminAddAnnouncements")}><Ionicons name='add' size={48} color={Theme.text.primary} /></TouchableOpacity></View> : null}
           
         </View>
         <View style={styles.recentActivities.container}>
