@@ -10,10 +10,10 @@ const TrashValue = ({iconColor1, iconColor2, type, multiplier, textColor}) => {
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <View style={[styles.iconTop, {backgroundColor: iconColor1}]}>
             <View style={[styles.iconTop, {backgroundColor: iconColor2, width: "80%", height: "80%", alignSelf: 'center'}]}>
-                <Text style={{textAlign: 'center', color: textColor}}>{multiplier}</Text>
+                <Text style={{textAlign: 'center'}}>{multiplier}</Text>
             </View>
         </View>
-        <Text style={{color: Theme.text.primary, marginLeft: 10}}>{type}</Text>
+        <Text style={{color: textColor, marginLeft: 10}}>{type}</Text>
       </View>
     </View>
   )

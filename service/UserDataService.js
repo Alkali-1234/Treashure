@@ -1,6 +1,8 @@
 import { getFirestore, getDoc, doc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
 import { getAuth, updateProfile, updateEmail } from "firebase/auth";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 //Placeholder data
 export let userDataSnapshot = {
@@ -49,7 +51,8 @@ export const updateUserProfile = async (username, email, profilePictureLink) => 
 
     try {
         console.log("Refreshing user data...");
-        await getUserData(auth.currentUser.uid);
+        const authData = JSON.parse(await AsyncStorage.getItem("user"));
+        await getUserData(authData.uid);
         console.log("Refreshed user data!") 
     } catch (error) {
         alert(error);
@@ -67,6 +70,7 @@ export const getUserData = async (uuid) => {
     }else{
         userDataSnapshot = dataSnapshot.data();
         console.log(dataSnapshot.data());
+        AsyncStorage.setItem("userData", JSON.stringify(dataSnapshot.data()));
         return(dataSnapshot.data());
     }
 }
@@ -84,6 +88,13 @@ export const initializeUserData = async (uuid, username, email, profilePictureLi
         isAdmin: false
     });
     console.log("Initialized user data!")
+    return true;
+}
+
+export const logout = async () => {
+    const auth = getAuth();
+    await auth.signOut();
+    await AsyncStorage.removeItem("user");
     return true;
 }
 

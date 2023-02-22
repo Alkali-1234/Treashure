@@ -3,8 +3,46 @@ import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import { Theme } from '../service/UniversalTheme';
 
 
-function AnnouncementCard({title, description, imageLink, author, authorProfilePictureLink}) {
-  return (
+function AnnouncementCard({title, description, imageLink, author, authorProfilePictureLink, bgColor, textPrimaryColor, textSecondaryColor}) {
+  const styles = StyleSheet.create({
+    container: {
+        backgroundColor: bgColor,
+        height: 85,
+        width: '90%',
+        marginTop: 15,
+        borderRadius: 10,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        flexDirection: 'row'
+    },
+    title: {
+        fontSize: 20,
+        color: textPrimaryColor
+    },
+    description: {
+        fontSize: 10,
+        width: '90%',
+        color: textSecondaryColor,
+        fontStyle: 'italic'
+    },
+    authorProfilePicture: {
+        height: 20,
+        width: 20,
+        borderRadius: 10,
+    },
+    authorUsername: {
+        color: textPrimaryColor,
+        marginLeft: 5,
+        fontSize: 10
+    },
+    image: {
+        height: '90%',
+        width: 65,
+        backgroundColor: 'red',
+        borderRadius: 5
+    }
+})
+    return (
        <View style={styles.container}>
         <View style={{flex: 1, justifyContent: 'space-between',}}>
             <View>
@@ -25,42 +63,6 @@ function AnnouncementCard({title, description, imageLink, author, authorProfileP
   )
 }
 
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: Theme.primary,
-        height: 85,
-        width: '90%',
-        marginTop: 15,
-        borderRadius: 10,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        flexDirection: 'row'
-    },
-    title: {
-        fontSize: 20,
-        color: Theme.text.primary
-    },
-    description: {
-        fontSize: 10,
-        width: '90%',
-        color: Theme.text.secondary,
-        fontStyle: 'italic'
-    },
-    authorProfilePicture: {
-        height: 20,
-        width: 20,
-        borderRadius: 10,
-    },
-    authorUsername: {
-        marginLeft: 5,
-        fontSize: 10
-    },
-    image: {
-        height: '90%',
-        width: 65,
-        backgroundColor: 'red',
-        borderRadius: 5
-    }
-})
+
 
 export default AnnouncementCard;

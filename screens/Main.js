@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useIsFocused } from '@react-navigation/native';
 import { Entypo, MaterialIcons } from 'react-native-vector-icons';
 import Settings from './Settings';
 import { Theme } from '../service/UniversalTheme';

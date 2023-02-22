@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet, Image, Modal, ActivityIndicator, ScrollView } from 'react-native';
-import { Theme } from '../service/UniversalTheme';
+import * as UniversalTheme from '../service/UniversalTheme';
 import * as UserDataService from '../service/UserDataService';
 import AnnouncementCard from '../components/AnnouncementCard';
 import { FontAwesome5, Ionicons, AntDesign } from 'react-native-vector-icons'
@@ -10,6 +10,8 @@ import * as Value from '../constants/trashValueConstants';
 import TrashValue from '../components/TrashValue';
 import { getAnnouncementsData } from '../service/UniversalService';
 import { deleteAnnouncement } from '../service/AdminPanelService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 
 function Home({navigation}) {
 
@@ -19,14 +21,55 @@ function Home({navigation}) {
   const [announcementsData, setAnnouncementsData] = useState(null);
   const [reloadAnnouncements, setReloadAnnouncements] = useState(false);
   const [userDataSnapshot, setUserDataSnapshot] = useState(null);
+  const isFocused = useIsFocused();
+  const [Theme, setThemeValue] = useState({});
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
     useEffect(() => {
-      setUserDataSnapshot(UserDataService.userDataSnapshot);
-    }, [UserDataService.userDataSnapshot])
+      if(isFocused){
+        getUserDataFromAsyncStorage();}
+        getThemeFromAsyncStorage();
+    }, [isFocused])
 
     useEffect(() => {
       navigation.setOptions({headerShown: false});
       getData();
     }, [reloadAnnouncements])
+
+    useEffect(() => {
+      checkIfHasLoggedInBefore();
+    }, []);
+
+    const checkIfHasLoggedInBefore = async () => {
+      const userData = await AsyncStorage.getItem("userData");
+      const authData = await AsyncStorage.getItem("user");
+      if(userData === null || authData === null){
+        navigation.navigate("Login_Signup");
+      }
+    }
+
+    const getUserDataFromAsyncStorage = async () => {
+      console.log(await AsyncStorage.getItem("userData"));
+      const userDataVal = JSON.parse(await AsyncStorage.getItem('userData'));
+      setUserDataSnapshot(userDataVal);
+      
+    }
+
+    const getThemeFromAsyncStorage = async () => {
+      const themeVal = await AsyncStorage.getItem('theme');
+      if(themeVal !== null){
+        if(themeVal === 'light'){
+          setIsDarkMode(false);
+          setThemeValue(UniversalTheme.lightTheme);
+        } else {
+          setIsDarkMode(true);
+        }
+      } else {
+        await AsyncStorage.setItem('theme', 'light');
+        setIsDarkMode(false);
+        getThemeFromAsyncStorage();
+      }
+    }
 
     const getData = async () => {
       setIsLoadingAnnouncements(true);
@@ -41,6 +84,143 @@ function Home({navigation}) {
       setReloadAnnouncements(false);
       return true;
     }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: isDarkMode ? UniversalTheme.darkTheme.primary : UniversalTheme.lightTheme.primary,
+    height: '100%',
+  },
+  topBar: {
+    backgroundColor: isDarkMode ? UniversalTheme.darkTheme.secondary : UniversalTheme.lightTheme.secondary,
+    width: '100%',
+    height: 85,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  usernameText: {
+    color: isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary,
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginLeft: 15
+  },
+  numValTopBar: {
+    marginLeft: 5,
+    fontSize: 15,
+    color: isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary,
+  },
+  mainContentContainer: {
+    marginHorizontal: 30,
+    marginTop: 15,
+    flexDirection: 'column',
+    flex: 1,
+    justifyContent: 'space-between'
+  },
+  recentActivities: {
+    text: {
+      color: isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary,
+      fontSize: 25,
+      padding: 10,
+    },
+    textContainer: {
+      width: 208,
+      borderRadius: 15
+    },
+    container: {
+      marginTop: 15,
+      borderRadius: 10,
+      height: 250,
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      alignItems: 'center',
+      justifyContent: 'center',
+    }
+  },
+  modalContainer: {
+    backgroundColor: 'rgba(20, 19, 19, 0.64)',
+    height: "100%",
+    width: "100%",
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  modalMainContent: {
+    backgroundColor: isDarkMode ? UniversalTheme.darkTheme.primary : UniversalTheme.lightTheme.primary,
+    height: "75%",
+    width: "75%",
+    borderRadius: 15,
+    justifyContent: 'space-between'
+  },
+  modalImage: {
+    width: "100%",
+    height: "35%",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10
+  },
+  modalTopContentContainer: {
+    marginHorizontal: 10
+  },
+  modalTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary
+  },
+  modalDescription: {
+    fontSize: 14,
+    fontWeight: '400',
+    color : isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary,
+    fontStyle: 'italic'
+  },
+  modalFooter: {
+    marginLeft: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  modalFooterImage: {
+    height: 30,
+    width: 30,
+    borderRadius: 15
+  },
+  footerText: {
+    marginLeft: 5,
+    fontSize: 15,
+    color: isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary
+  },
+  modalCloseButtonContainer: {
+    marginRight: 10,
+    marginBottom: 10,
+    justifyContent: 'center',
+    backgroundColor: isDarkMode ? UniversalTheme.darkTheme.secondary : UniversalTheme.lightTheme.secondary,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    borderRadius: 5
+  },
+  exchangeButtonContainer: {
+    marginVertical: 15,
+  },
+  exchangeButton: {
+    padding: 10,
+    backgroundColor : isDarkMode ? UniversalTheme.darkTheme.secondary : UniversalTheme.lightTheme.secondary,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  exchangeText: {
+    color: isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary,
+    fontSize: 18
+  },
+  // temp: {
+  //   padding: 15,
+  //   backgroundColor: isDarkMode ? UniversalTheme.darkTheme.secondary : UniversalTheme.lightTheme.secondary,
+  //   borderRadius: 10,
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  //   alignItems: 'center'
+  // }
+})
+
+
 
   return (
     <View style={styles.container}>
@@ -61,7 +241,7 @@ function Home({navigation}) {
         <View style={{flexDirection: 'row', alignItems: 'center', marginRight: 30, marginTop: 15}}>
           <FontAwesome5 name='coins' size={24} color="yellow" />
           <Text style={styles.numValTopBar}>{userDataSnapshot?.coins}</Text>
-          <FontAwesome5 name='trash-alt' size={24} color={Theme.text.primary} style={{marginLeft: 15}} />
+          <FontAwesome5 name='trash-alt' size={24} color={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} style={{marginLeft: 15}} />
           <Text style={styles.numValTopBar}>{userDataSnapshot?.trash}</Text>
         </View>
         
@@ -73,8 +253,19 @@ function Home({navigation}) {
           
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <View style={{flexDirection: 'row'}}>
-            <View style={{alignItems: 'center', justifyContent: 'center', width: 55, backgroundColor: Theme.secondary, borderRadius: 15}} >
-            <FontAwesome5 name='bolt' size={24} color={Theme.text.primary} />
+            <View>
+              <View style={{
+                width: 55,
+                height: 55,
+                borderRadius: 10,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: isDarkMode ? UniversalTheme.darkTheme.secondary : UniversalTheme.lightTheme.secondary,
+              }}>
+                <FontAwesome5 name='bolt' size={24} color={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} />
+              </View>
+            
             </View>
             <View style={styles.recentActivities.textContainer}>
 
@@ -83,11 +274,14 @@ function Home({navigation}) {
           </View>
           
           
-          {userDataSnapshot?.isAdmin ? <View><TouchableOpacity onPress={() => navigation.navigate("AdminAddAnnouncements")}><Ionicons name='add' size={48} color={Theme.text.primary} /></TouchableOpacity></View> : null}
+          {userDataSnapshot?.isAdmin ? <View><TouchableOpacity onPress={() => navigation.navigate("AdminAddAnnouncements")}><Ionicons name='add' size={48} color={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} /></TouchableOpacity></View> : null}
           
         </View>
-        <View style={styles.recentActivities.container}>
-          {isLoadingAnnouncements ? <ActivityIndicator size={24} color={Theme.text.primary} style={{marginTop: 15}} /> : null}
+        <View>
+          <View style={styles.recentActivities.container}>
+
+          
+          {isLoadingAnnouncements ? <ActivityIndicator size={24} color={Theme?.text?.primary} style={{marginTop: 15}} /> : null}
           
           
 
@@ -98,18 +292,19 @@ function Home({navigation}) {
               setShowSelectedItemModal(true);
               HomeService.setAnnouncementSelectedItem(item);
             }} key={item.id}>
-              <AnnouncementCard key={item.id} title={item.title} description={item.description} imageLink={item.image} author={item.author} authorProfilePictureLink={item.authorProfilePictureLink} />
+              <AnnouncementCard key={item.id} title={item.title} description={item.description} imageLink={item.image} author={item.author} authorProfilePictureLink={item.authorProfilePictureLink} bgColor={isDarkMode ? UniversalTheme.darkTheme.primary : UniversalTheme.lightTheme.primary} textPrimaryColor={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} textSecondaryColor={isDarkMode ? UniversalTheme.darkTheme.text.secondary : UniversalTheme.lightTheme.text.secondary} />
             </TouchableOpacity>
             
             
           )}
           </ScrollView>
+          </View>
         </View>
         
         {/* Trash Directory */}
         <View>
           <Text style={[styles.recentActivities.text, {padding: 0, marginVertical: 10, fontWeight: 'bold'}]}>Trash Values</Text>
-          <Text style={{color: Theme.text.primary, fontSize: 12, backgroundColor: Theme.form.background, padding: 5, borderRadius: 5}}>Trash values are based on it's type and weight per 100g</Text>
+          <Text style={{color: Theme?.text?.primary, fontSize: 12, backgroundColor: isDarkMode ? UniversalTheme.darkTheme.secondary : UniversalTheme.lightTheme.secondary, padding: 5, borderRadius: 5, color: isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary}}>Trash values are based on it's type and weight per 100g</Text>
           
           <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
             {[
@@ -117,14 +312,14 @@ function Home({navigation}) {
               {id: 2, type: 'Plastic', iconColor1: '#3EC965', iconColor2: '#ABF1B2', textColor: '#000', multiplier: Value.PLASTIC_MULTIPLIER},
               {id: 3, type: 'Organic', iconColor1: '#92B4AB', iconColor2: '#D0EAEC', textColor: '#000', multiplier: Value.ORGANIC_MULTIPLIER},
             
-            ].map((item) => { return <TrashValue key={item.id} type={item.type} iconColor1={item.iconColor1} iconColor2={item.iconColor2} textColor={item.textColor} multiplier={item.multiplier} /> })}
+            ].map((item) => { return <TrashValue key={item.id} type={item.type} iconColor1={item.iconColor1} iconColor2={item.iconColor2} textColor={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} multiplier={item.multiplier} /> })}
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10}}>
             {[
               {id: 1, type: 'Metal', iconColor1: '#DBBE58', iconColor2: '#F0A1A1', textColor: '#000', multiplier: Value.METAL_MULTIPLIER},
               {id: 2, type: 'Cloth', iconColor1: '#B79005', iconColor2: '#FFE600', textColor: '#000', multiplier: Value.CLOTH_MULTIPLIER},
               {id: 3, type: 'Cardboard', iconColor1: '#838383', iconColor2: '#FFCD1E', textColor: '#000', multiplier: Value.CARDBOARD_MULTIPLIER},
-            ].map((item) => { return <TrashValue key={item.id} type={item.type} iconColor1={item.iconColor1} iconColor2={item.iconColor2} textColor={item.textColor} multiplier={item.multiplier} /> })}
+            ].map((item) => { return <TrashValue key={item.id} type={item.type} iconColor1={item.iconColor1} iconColor2={item.iconColor2} textColor={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} multiplier={item.multiplier} /> })}
           </View>
         </View>
         
@@ -133,11 +328,11 @@ function Home({navigation}) {
         <View style={styles.exchangeButtonContainer}>
           <TouchableOpacity style={styles.exchangeButton} onPress={() => navigation.navigate("TrashExchange")}>
             <Text style={styles.exchangeText}>Trash Exchange</Text>
-            <AntDesign name="right" size={24} color={Theme.text.primary} />
+            <AntDesign name="right" size={24} color={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} />
           </TouchableOpacity>
           <TouchableOpacity style={[styles.exchangeButton, {marginTop: 15}]} onPress={() => navigation.navigate("CoinExchange")}>
             <Text style={styles.exchangeText}>Coin Exchange</Text>
-            <AntDesign name="right" size={24} color={Theme.text.primary} />
+            <AntDesign name="right" size={24} color={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} />
           </TouchableOpacity>
         </View>
 
@@ -158,9 +353,11 @@ function Home({navigation}) {
                 </View>
               </View>
               <View>
+                {userDataSnapshot?.isAdmin ?
                 <TouchableOpacity style={{margin: 10, padding: 10, backgroundColor: "red", borderRadius: 5}} onPress={async () => {await deleteAnnouncement(HomeService.announcementCurrentSelectedItem.id); setReloadAnnouncements(true)}}>
                   <Text style={{color: "white", textAlign: 'center'}}>Delete Announcement</Text>
                 </TouchableOpacity>
+                : null}
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <View style={styles.modalFooter}>
                 <Image source={{uri: HomeService.announcementCurrentSelectedItem?.authorProfilePictureLink}} style={styles.modalFooterImage} />
@@ -168,7 +365,7 @@ function Home({navigation}) {
                 </View>
                 <View style={styles.modalCloseButtonContainer}>
                   <TouchableOpacity onPress={() => setShowSelectedItemModal(false)}>
-                    <Ionicons name="exit-outline" size={24} color={Theme.text.primary} />
+                    <Ionicons name="exit-outline" size={24} color={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} />
                   </TouchableOpacity>
                   
                 </View>
@@ -183,129 +380,6 @@ function Home({navigation}) {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: Theme.primary,
-    height: '100%',
-  },
-  topBar: {
-    backgroundColor: Theme.secondary,
-    width: '100%',
-    height: 85,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  usernameText: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    marginLeft: 15
-  },
-  numValTopBar: {
-    marginLeft: 5,
-    fontSize: 15
-  },
-  mainContentContainer: {
-    marginHorizontal: 30,
-    marginTop: 15,
-    flexDirection: 'column',
-    flex: 1,
-    justifyContent: 'space-between'
-  },
-  recentActivities: {
-    text: {
-      color: Theme.text.primary,
-      fontSize: 25,
-      padding: 10,
-    },
-    textContainer: {
-      width: 208,
-      borderRadius: 15
-    },
-    container: {
-      marginTop: 15,
-      borderRadius: 10,
-      height: 250,
-      backgroundColor: Theme.secondary,
-      alignItems: 'center',
-      justifyContent: 'center',
-    }
-  },
-  modalContainer: {
-    backgroundColor: 'rgba(20, 19, 19, 0.64)',
-    height: "100%",
-    width: "100%",
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  modalMainContent: {
-    backgroundColor: Theme.primary,
-    height: "75%",
-    width: "75%",
-    borderRadius: 15,
-    justifyContent: 'space-between'
-  },
-  modalImage: {
-    width: "100%",
-    height: "35%",
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10
-  },
-  modalTopContentContainer: {
-    marginHorizontal: 10
-  },
-  modalTitle: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: Theme.text.primary
-  },
-  modalDescription: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: Theme.text.primary,
-    fontStyle: 'italic'
-  },
-  modalFooter: {
-    marginLeft: 10,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  modalFooterImage: {
-    height: 30,
-    width: 30,
-    borderRadius: 15
-  },
-  footerText: {
-    marginLeft: 5,
-    fontSize: 15
-  },
-  modalCloseButtonContainer: {
-    marginRight: 10,
-    marginBottom: 10,
-    justifyContent: 'center',
-    backgroundColor: Theme.secondary,
-    paddingVertical: 5,
-    paddingHorizontal: 5,
-    borderRadius: 5
-  },
-  exchangeButtonContainer: {
-    marginVertical: 15,
-  },
-  exchangeButton: {
-    padding: 10,
-    backgroundColor: Theme.secondary,
-    borderRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  exchangeText: {
-    color: Theme.text.primary,
-    fontSize: 18
-  }
-})
 
 
 export default Home;

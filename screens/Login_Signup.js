@@ -21,7 +21,7 @@ function Login_Signup( {navigation} ) {
     
 
     useEffect(() => {
-        navigation.setOptions({headerShown: false})
+        navigation.setOptions({headerShown: false})  
     })
     
 

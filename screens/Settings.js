@@ -5,6 +5,9 @@ import * as UserDataService from '../service/UserDataService';
 import { FontAwesome5 } from 'react-native-vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getAuth } from "firebase/auth";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 
 function Settings({navigation}) {
   const [newUserName, setNewUserName] = useState(userDataSnapshot?.username);
@@ -35,15 +38,44 @@ function Settings({navigation}) {
 
   }
 
+
+
+    const isFocused = useIsFocused();
+
     useEffect(() => {
-      setUserDataSnapshot(UserDataService.userDataSnapshot);
-    }, [UserDataService.userDataSnapshot])
+      if(isFocused)
+        getUserDataFromAsyncStorage();
+      
+    }, [isFocused])
+
+    const getUserDataFromAsyncStorage = async () => {
+      console.log(await AsyncStorage.getItem("userData"));
+      const userDataVal = JSON.parse(await AsyncStorage.getItem('userData'));
+      setUserDataSnapshot(userDataVal);
+      
+    }
   
     useEffect(() => {
       navigation.setOptions({headerShown: false})
     })
-    const handleUpdateProfile = () => {
-      UserDataService.updateUserProfile(newUserName, newEmail, profilePictureLink);
+    const handleUpdateProfile = async () => {
+      try {
+        await UserDataService.updateUserProfile(newUserName, newEmail, profilePictureLink);
+        await getUserData();
+      } catch (error) {
+        alert(error)
+      } 
+    }
+    const getUserData = async () => {
+      try {
+        console.log("Getting user data...")
+        const auth = getAuth();
+        const authData = JSON.parse(await AsyncStorage.getItem("user"));
+        const data = await UserDataService.getUserData(authData.uid);
+        setUserDataSnapshot(data);
+      } catch (error) {
+        alert(error)
+      }
     }
   return (
     <View style={styles.container}>
@@ -74,7 +106,9 @@ function Settings({navigation}) {
         {/* Toggle theme button */}
         <TouchableOpacity onPress={() => toggleTheme()} style={{backgroundColor: Theme.form.background, padding: 10, borderRadius: 10, marginTop: 20}}><Text style={{color: Theme.text.primary, textAlign: 'center'}}>Toggle Theme</Text></TouchableOpacity>
         {/* Update User Profile button */}
-        <TouchableOpacity onPress={handleUpdateProfile} style={{backgroundColor: "#40ac74", padding: 10, borderRadius: 10, marginTop: 10}}><Text style={{color: "white", textAlign: 'center'}}>Update Profile</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => handleUpdateProfile()} style={{backgroundColor: "#40ac74", padding: 10, borderRadius: 10, marginTop: 10}}><Text style={{color: "white", textAlign: 'center'}}>Update Profile</Text></TouchableOpacity>
+        {/* Logout Button */}
+        <TouchableOpacity onPress={async () => {await UserDataService.logout(); console.log("Logged out"); navigation.navigate("Login_Signup")}} style={{backgroundColor: "#ac4040", padding: 10, borderRadius: 10, marginTop: 10}}><Text style={{color: "white", textAlign: 'center'}}>Logout</Text></TouchableOpacity>
       </View>
     </View>
   )

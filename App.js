@@ -39,7 +39,7 @@ export default function App() {
 
   return (
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName='Login_Signup'>
           <Stack.Screen name="Login_Signup" component={Login_Signup} />
           <Stack.Screen name="Main" component={Main} />
           <Stack.Screen name="TrashExchange" component={TrashExchange} />
