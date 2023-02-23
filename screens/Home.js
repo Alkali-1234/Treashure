@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, Image, Modal, ActivityIndicator, ScrollView } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet, Image, Modal, ActivityIndicator, ScrollView, StatusBar } from 'react-native';
 import * as UniversalTheme from '../service/UniversalTheme';
 import * as UserDataService from '../service/UserDataService';
 import AnnouncementCard from '../components/AnnouncementCard';
@@ -234,8 +234,10 @@ const styles = StyleSheet.create({
 
 
   return (
-    <SafeAreaView style={{backgroundColor: isDarkMode ? UniversalTheme.darkTheme.secondary : UniversalTheme.lightTheme.secondary}}>
-    <View style={styles.container}>
+    <>
+      <StatusBar backgroundColor={isDarkMode ? UniversalTheme.darkTheme.secondary : UniversalTheme.lightTheme.secondary} />
+      <SafeAreaView>
+        <View style={styles.container}>
       <View style={styles.topBar}>
         <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 30}}>
           <Image style={{height: 40, width: 40, borderRadius: 20}} source={{uri: userDataSnapshot?.profilePictureLink}} />
@@ -392,8 +394,9 @@ const styles = StyleSheet.create({
             </View>
         </View>
       </Modal>
-    </View>
-    </SafeAreaView>
+        </View>
+      </SafeAreaView>
+    </>
   )
 }
 

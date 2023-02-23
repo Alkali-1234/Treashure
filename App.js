@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login_Signup from './screens/Login_Signup';
@@ -50,5 +50,6 @@ export default function App() {
           <Stack.Screen name="AdminRequestCodeList" component={AdminRequestCodeList} />
         </Stack.Navigator>
       </NavigationContainer>
+      
   );
 }
