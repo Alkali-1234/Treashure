@@ -12,6 +12,7 @@ import { getAnnouncementsData } from '../service/UniversalService';
 import { deleteAnnouncement } from '../service/AdminPanelService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 function Home({navigation}) {
 
@@ -24,6 +25,16 @@ function Home({navigation}) {
   const isFocused = useIsFocused();
   const [Theme, setThemeValue] = useState({});
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+    useEffect(() => {
+      navigation.addListener('beforeRemove', (e) => {
+        if(e.data.action.type == 'GO_BACK'){
+          e.preventDefault();
+        }else{
+          return;
+        }
+      });
+    }, [navigation])
 
     useEffect(() => {
       if(isFocused){
@@ -93,7 +104,7 @@ const styles = StyleSheet.create({
   topBar: {
     backgroundColor: isDarkMode ? UniversalTheme.darkTheme.secondary : UniversalTheme.lightTheme.secondary,
     width: '100%',
-    height: 85,
+    height: 65,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -130,7 +141,7 @@ const styles = StyleSheet.create({
       marginTop: 15,
       borderRadius: 10,
       height: 250,
-      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      backgroundColor: isDarkMode ? UniversalTheme.darkTheme.secondary : UniversalTheme.lightTheme.secondary,
       alignItems: 'center',
       justifyContent: 'center',
     }
@@ -223,9 +234,10 @@ const styles = StyleSheet.create({
 
 
   return (
+    <SafeAreaView style={{backgroundColor: isDarkMode ? UniversalTheme.darkTheme.secondary : UniversalTheme.lightTheme.secondary}}>
     <View style={styles.container}>
       <View style={styles.topBar}>
-        <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 30, marginTop: 15}}>
+        <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 30}}>
           <Image style={{height: 40, width: 40, borderRadius: 20}} source={{uri: userDataSnapshot?.profilePictureLink}} />
           <Text style={styles.usernameText}>{userDataSnapshot?.username}</Text>
           {/* Admin Badge */}
@@ -238,7 +250,7 @@ const styles = StyleSheet.create({
         {/* Coin and Trash display, show only for non-admins */}
         {!userDataSnapshot?.isAdmin ? 
         
-        <View style={{flexDirection: 'row', alignItems: 'center', marginRight: 30, marginTop: 15}}>
+        <View style={{flexDirection: 'row', alignItems: 'center', marginRight: 30}}>
           <FontAwesome5 name='coins' size={24} color="yellow" />
           <Text style={styles.numValTopBar}>{userDataSnapshot?.coins}</Text>
           <FontAwesome5 name='trash-alt' size={24} color={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} style={{marginLeft: 15}} />
@@ -274,14 +286,16 @@ const styles = StyleSheet.create({
           </View>
           
           
-          {userDataSnapshot?.isAdmin ? <View><TouchableOpacity onPress={() => navigation.navigate("AdminAddAnnouncements")}><Ionicons name='add' size={48} color={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} /></TouchableOpacity></View> : null}
+          {userDataSnapshot?.isAdmin ? <View><TouchableOpacity onPress={() => navigation.navigate("AdminAddAnnouncements", {
+            Theme: isDarkMode ? UniversalTheme.darkTheme : UniversalTheme.lightTheme
+          })}><Ionicons name='add' size={48} color={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} /></TouchableOpacity></View> : null}
           
         </View>
         <View>
           <View style={styles.recentActivities.container}>
 
           
-          {isLoadingAnnouncements ? <ActivityIndicator size={24} color={Theme?.text?.primary} style={{marginTop: 15}} /> : null}
+          {isLoadingAnnouncements ? <ActivityIndicator size={24} color={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} style={{marginTop: 15}} /> : null}
           
           
 
@@ -330,7 +344,9 @@ const styles = StyleSheet.create({
             <Text style={styles.exchangeText}>Trash Exchange</Text>
             <AntDesign name="right" size={24} color={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} />
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.exchangeButton, {marginTop: 15}]} onPress={() => navigation.navigate("CoinExchange")}>
+          <TouchableOpacity style={[styles.exchangeButton, {marginTop: 15}]} onPress={() => navigation.navigate("CoinExchange", {
+            Theme : isDarkMode ? UniversalTheme.darkTheme : UniversalTheme.lightTheme,
+          })}>
             <Text style={styles.exchangeText}>Coin Exchange</Text>
             <AntDesign name="right" size={24} color={isDarkMode ? UniversalTheme.darkTheme.text.primary : UniversalTheme.lightTheme.text.primary} />
           </TouchableOpacity>
@@ -377,6 +393,7 @@ const styles = StyleSheet.create({
         </View>
       </Modal>
     </View>
+    </SafeAreaView>
   )
 }
 

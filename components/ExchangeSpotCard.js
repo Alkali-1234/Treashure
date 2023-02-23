@@ -1,10 +1,9 @@
 import { View, Text, Linking, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { Theme } from '../service/UniversalTheme';
 import { AntDesign } from 'react-native-vector-icons';
 
 
-const ExchangeSpotCard = ({address, district, link}) => {
+const ExchangeSpotCard = ({address, district, link, Theme}) => {
 
     const handlePress = async () => {
        const url = link;
@@ -16,22 +15,6 @@ const ExchangeSpotCard = ({address, district, link}) => {
            alert(`Don't know how to open URI: ${url}`);
        }
     }
-
-  return (
-        <View style={styles.container}>
-        <View>
-            <Text style={styles.title}>{address}</Text>
-            <Text style={styles.district}>{district}</Text>
-        </View>
-        <View>
-            <AntDesign name="right" size={24} color={Theme.text.primary} />
-        </View>
-        
-        </View>
-    
-  )
-}
-
 
 const styles = StyleSheet.create({
     container: {
@@ -52,5 +35,23 @@ const styles = StyleSheet.create({
         color: Theme.text.secondary
     }
 })
+
+  return (
+        <View style={styles.container}>
+        <View>
+            <Text style={styles.title}>{address}</Text>
+            <Text style={styles.district}>{district}</Text>
+        </View>
+        <View>
+            <AntDesign name="right" size={24} color={Theme.text.primary} />
+        </View>
+        
+        </View>
+    
+  )
+}
+
+
+
 
 export default ExchangeSpotCard;

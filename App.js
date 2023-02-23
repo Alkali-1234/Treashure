@@ -42,8 +42,8 @@ export default function App() {
         <Stack.Navigator initialRouteName='Login_Signup'>
           <Stack.Screen name="Login_Signup" component={Login_Signup} />
           <Stack.Screen name="Main" component={Main} />
-          <Stack.Screen name="TrashExchange" component={TrashExchange} />
-          <Stack.Screen name="CoinExchange" component={CoinExchange} />
+          <Stack.Screen name="TrashExchange" component={TrashExchange} options={{title: "Trash Exchange"}} />
+          <Stack.Screen name="CoinExchange" component={CoinExchange} options={{title: "Coin Exchange"}} />
           <Stack.Screen name="RewardRequested" component={RewardRequested} />
           <Stack.Screen name="AdminUserTrashSubmission" component={AdminUserTrashSubmission} />
           <Stack.Screen name="AdminAddAnnouncements" component={AdminAddAnnouncements} />

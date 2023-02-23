@@ -98,6 +98,8 @@ function Login_Signup( {navigation} ) {
                         setButtonColor('green');
                         setTimeout(() => {
                             navigation.navigate("Main");
+                            setButtonColor('#003EDD');
+                            setReturnMessage('');
                         }, 1000);
                     }).catch((err) => {
                         setIsLoading(false);

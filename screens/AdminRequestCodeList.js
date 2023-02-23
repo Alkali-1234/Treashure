@@ -5,13 +5,26 @@ import RequestCodeItem from '../components/RequestCodeItem';
 import { getRequestCodes } from '../service/AdminPanelService';
 
 
-const AdminRequestCodeList = () => {
+const AdminRequestCodeList = ({navigation, route}) => {
     const [requestCodeList, setRequestCodeList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
+    const {Theme} = route.params;
+
     useEffect(() => {
       getCodes();
+      navigation.setOptions({
+        headerStyle: {
+            backgroundColor: Theme.primary,
+        },
+        headerTitleStyle: {
+            color: Theme.text.primary,
+        },
+        headerTintColor: Theme.text.primary,
+    })
     }, [])
+
+
 
     const getCodes = async () => {
         try {
@@ -27,20 +40,7 @@ const AdminRequestCodeList = () => {
     }
     
 
-  return (
-    <View style={styles.container}>
-        <Text style={styles.header}>Search Request Code</Text>
-        <View style={styles.listContainer}>
-            {isLoading ? <ActivityIndicator size="large" color={Theme.text.primary} animating={isLoading} /> : null}
-            {requestCodeList.map((item) => (
-                <RequestCodeItem key={item.id} item={item} getCodes={getCodes} />
-            ))}
-        </View>
-    </View>
-  )
-}
-
-const styles = StyleSheet.create({
+    const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
@@ -57,5 +57,20 @@ const styles = StyleSheet.create({
         padding: 10,
     }
 })
+
+  return (
+    <View style={styles.container}>
+        <Text style={styles.header}>Search Request Code</Text>
+        <View style={styles.listContainer}>
+            {isLoading ? <ActivityIndicator size="large" color={Theme.text.primary} animating={isLoading} /> : null}
+            {requestCodeList.map((item) => (
+                <RequestCodeItem key={item.id} item={item} getCodes={getCodes} Theme={Theme} />
+            ))}
+        </View>
+    </View>
+  )
+}
+
+
 
 export default AdminRequestCodeList;

@@ -46,7 +46,7 @@ function AnnouncementCard({title, description, imageLink, author, authorProfileP
        <View style={styles.container}>
         <View style={{flex: 1, justifyContent: 'space-between',}}>
             <View>
-                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.title} numberOfLines={1}>{title}</Text>
                 <Text style={styles.description} numberOfLines={1} >{description}</Text>
             </View>
             

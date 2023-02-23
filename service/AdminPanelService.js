@@ -34,17 +34,17 @@ export const getRequestCodes = async () => {
 export const handleAcceptItem = async (item) => {
     console.log("Accepting request...", item.item);
     try {
-        const doc = await getFirestoreDoc("users", item.item.uid);
+        const doc = await getFirestoreDoc("users", item.uid);
         const coins = doc.coins;
         if(coins < item.item.cost) {
             alert("User does not have enough coins!");
             return;
         } else {
-            await updateFirestoreDoc("users", item.item.uid, {
-                coins: coins - item.item.cost
+            await updateFirestoreDoc("users", item.uid, {
+                coins: coins - item.cost
             });
 
-            await deleteFirestoreDoc("requestCodes", item.item.id);
+            await deleteFirestoreDoc("requestCodes", item.id);
         }
     } catch (error) {
         alert(error)

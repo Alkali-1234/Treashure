@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Modal } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Modal, ActivityIndicator } from 'react-native'
 import { Ionicons, AntDesign } from 'react-native-vector-icons';
-import { Theme } from '../service/UniversalTheme'
 import { Dropdown } from 'react-native-element-dropdown';
 import * as Value from '../constants/trashValueConstants';
 import { handleTrashSubmission } from '../service/AdminPanelService';
@@ -9,12 +8,15 @@ import { handleTrashSubmission } from '../service/AdminPanelService';
 
 
 
-const AdminUserTrashSubmission = ({navigation}) => {
+const AdminUserTrashSubmission = ({navigation, route}) => {
     const [latestID, setLatestID] = useState(1);
     const [username, setUsername] = useState('');
     const [showConfirmTrashSubmissionModal, setShowConfirmTrashSubmissionModal] = useState(false);
     const [totalCoins, setTotalCoins] = useState(0);
     const [totalTrash, setTotalTrash] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const {Theme} = route.params;
 
     const initialValue = {
             id: 1,
@@ -27,6 +29,19 @@ const AdminUserTrashSubmission = ({navigation}) => {
     const [trashList, setTrashList] = useState([
         initialValue,
     ])
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerStyle: {
+                backgroundColor: Theme.primary,
+            },
+            headerTitleStyle: {
+                color: Theme.text.primary,
+            },
+            headerTintColor: Theme.text.primary,
+        })
+    }, [])
+
 
     const addValue = () => {
         setTrashList([...trashList, {...initialValue, id: latestID+1}]);
@@ -63,126 +78,15 @@ const AdminUserTrashSubmission = ({navigation}) => {
         setTotalTrash(totalTrash);
     }
     const submitTrash = async () => {
+        setIsLoading(true);
         const result = await handleTrashSubmission(username, totalCoins, totalTrash);
         if(result){
             navigation.navigate("Home")
+            setIsLoading(false)
         }
     }
 
-  return (
-    <View style={styles.container}>
-        <Text style={styles.header}>User Trash Submission</Text>
-        <ScrollView style={{marginTop: 30, width: "100%"}}>
-            <View style={styles.cardContainer}>
-                <TextInput placeholder='Username' style={styles.genericTextInput} placeholderTextColor={Theme.text.secondary} onChangeText={(value) => setUsername(value)} />
-                
-
-                <View>
-                    {trashList?.map((item, index) => (
-                    <View key={index}><View key={index} style={styles.trashTypeCardContainer}>
-                        <View style={styles.trashTypeCloseContainer}>
-                            <TouchableOpacity onPress={() => deleteValue(index)}>
-                                <AntDesign name="closecircle" size={24} color="red" />
-                            </TouchableOpacity>
-                        </View>
-                        <Dropdown
-                            data={[
-                                {label: 'Paper', value: 1, multiplier: Value.PAPER_MULTIPLIER},
-                                {label: 'Plastic', value: 2, multiplier: Value.PLASTIC_MULTIPLIER},
-                                {label: 'Organic', value: 3, multiplier: Value.ORGANIC_MULTIPLIER},
-                                {label: 'Metal', value: 4, multiplier: Value.METAL_MULTIPLIER},
-                                {label: 'Cloth', value: 5, multiplier: Value.CLOTH_MULTIPLIER},
-                                {label: 'Cardboard', value: 6, multiplier: Value.CARDBOARD_MULTIPLIER},
-                            ]}
-                            labelField="label"
-                            valueField="value"
-                            style={[styles.genericTextInput, {paddingHorizontal: 5}]} 
-                            placeholder='Select Trash Type'
-                            placeholderStyle={{
-                                color: Theme.text.secondary,
-                                fontSize: 16
-                            }}
-                            onChange={(value) => {changeDropDownValue(trashList.indexOf(item), value.value, value.multiplier, value.label)}}
-                            value={trashList[trashList.indexOf(item)].type}
-                        />
-                        <TextInput placeholder='Amount'
-                        placeholderTextColor={Theme.text.secondary}
-                        style={styles.genericTextInput}
-                        value={trashList[trashList.indexOf(item)].amount}
-                        onChangeText={(value) => changeAmountValue(trashList.indexOf(item), value)}
-                        />
-
-                    </View></View>
-                    
-                    ))}
-
-
-                    <View style={styles.addButtonContainer}>
-                        <TouchableOpacity onPress={() => addValue()}>
-                            <Ionicons name="add-circle" size={48} color={Theme.text.secondary} /> 
-                        </TouchableOpacity>
-                    </View>
-                    <TouchableOpacity onPress={() => {setShowConfirmTrashSubmissionModal(true); calculateTotal()}}>
-                        <View style={styles.submitContainer}>
-                            <Text style={styles.submitText}>Submit</Text>
-                        </View> 
-                    </TouchableOpacity>
-                    
-                </View>
-                
-            </View>
-        </ScrollView>
-        
-        <Modal
-            visible={showConfirmTrashSubmissionModal}
-            animationType='fade'
-            transparent={true}
-            onRequestClose={() => setShowConfirmTrashSubmissionModal(false)}
-        >
-            <View style={styles.confirmTrashSubmissionModalContainer}>
-                <View style={styles.confirmTrashSubmissionModalMainContentContainer}>
-                    <View>
-                    
-                    
-                    <Text style={styles.acceptTrashText}>Accept Trash</Text>
-                    <Text style={styles.acceptTrashUsername}>Username: {username}</Text>
-
-                    
-                    <View style={styles.acceptTrashDirectory}>
-                            <ScrollView style={{width: "100%", height: 100}}>
-                            {trashList.map((item, index) => (
-                                <View key={index} style={styles.acceptTrashDirectoryContainer}>
-                                    <Text style={styles.acceptTrashDirectoryText}>{item.name} : {item.amount} x {item.multiplier}/100G</Text>
-                                    <Text style={styles.acceptTrashDirectoryTextAmount}>{item.amount * item.multiplier}</Text>
-                                </View>
-                            ))}
-                            </ScrollView>
-                        
-                        <View style={styles.totalCoinContainer}>
-                            <Text>Total Coins: </Text>
-                            <Text>{totalCoins}</Text>
-                        </View>
-                        
-                    </View>
-                    </View>
-                    <View style={styles.buttonsContainer}>
-                        <TouchableOpacity style={[styles.button, {backgroundColor: "#40ac74"}]}>
-                            <Text style={styles.buttonText} onPress={() => {submitTrash()}}>Accept</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button, {backgroundColor: "#e03444"}]} onPress={() => setShowConfirmTrashSubmissionModal(false)}>
-                            <Text style={styles.buttonText}>Close</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-
-            </View>
-        </Modal>
-
-    </View>
-  )
-}
-
-const styles = StyleSheet.create({
+    const styles = StyleSheet.create({
     container: {
         height: "100%",
         width: "100%",
@@ -220,7 +124,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingLeft: 20,
         fontSize: 16,
-        marginTop: 10
+        marginTop: 10,
+        color: Theme.text.primary
     },
     trashTypeCardContainer: {
         padding: 15,
@@ -274,12 +179,14 @@ const styles = StyleSheet.create({
     acceptTrashText: {
         fontSize: 24,
         textAlign: 'center',
-        marginTop: 10
+        marginTop: 10,
+        color: Theme.text.primary
     },
     acceptTrashUsername: {
         fontWeight: 'bold',
         fontSize: 16,
-        textAlign: 'center'
+        textAlign: 'center',
+        color: Theme.text.primary
     },
     acceptTrashDirectory: {
         marginTop: 25,
@@ -292,7 +199,8 @@ const styles = StyleSheet.create({
         color: Theme.text.primary
     },
     acceptTrashDirectoryTextAmount: {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: Theme.text.primary
     },
     totalCoinContainer: {
         marginTop: 15,
@@ -314,5 +222,126 @@ const styles = StyleSheet.create({
         color: 'white'
     }
 })
+
+  return (
+    <View style={styles.container}>
+        <Text style={styles.header}>User Trash Submission</Text>
+        <ScrollView style={{marginTop: 30, width: "100%"}}>
+            <View style={styles.cardContainer}>
+                <TextInput placeholder='Username' style={styles.genericTextInput} placeholderTextColor={Theme.text.secondary} onChangeText={(value) => setUsername(value)} />
+                
+
+                <View>
+                    {trashList?.map((item, index) => (
+                    <View key={index}><View key={index} style={styles.trashTypeCardContainer}>
+                        <View style={styles.trashTypeCloseContainer}>
+                            <TouchableOpacity onPress={() => deleteValue(index)}>
+                                <AntDesign name="closecircle" size={24} color="red" />
+                            </TouchableOpacity>
+                        </View>
+                        <Dropdown
+                            data={[
+                                {label: 'Paper', value: 1, multiplier: Value.PAPER_MULTIPLIER},
+                                {label: 'Plastic', value: 2, multiplier: Value.PLASTIC_MULTIPLIER},
+                                {label: 'Organic', value: 3, multiplier: Value.ORGANIC_MULTIPLIER},
+                                {label: 'Metal', value: 4, multiplier: Value.METAL_MULTIPLIER},
+                                {label: 'Cloth', value: 5, multiplier: Value.CLOTH_MULTIPLIER},
+                                {label: 'Cardboard', value: 6, multiplier: Value.CARDBOARD_MULTIPLIER},
+                            ]}
+                            labelField="label"
+                            valueField="value"
+                            style={[styles.genericTextInput, {paddingHorizontal: 5}]} 
+                            itemTextStyle={{color: Theme.text.primary}}
+                            selectedTextStyle={{color: Theme.text.primary}}
+                            containerStyle={{backgroundColor: Theme.secondary, borderRadius: 10, marginTop: 10, paddingHorizontal: 5}}
+                            itemContainerStyle={{backgroundColor: Theme.secondary, borderRadius: 10}}
+                            
+                            placeholder='Select Trash Type'
+                            placeholderStyle={{
+                                color: Theme.text.secondary,
+                                fontSize: 16
+                            }}
+                            onChange={(value) => {changeDropDownValue(trashList.indexOf(item), value.value, value.multiplier, value.label)}}
+                            value={trashList[trashList.indexOf(item)].type}
+                        />
+                        <TextInput placeholder='Amount'
+                        placeholderTextColor={Theme.text.secondary}
+                        style={styles.genericTextInput}
+                        value={trashList[trashList.indexOf(item)].amount}
+                        onChangeText={(value) => changeAmountValue(trashList.indexOf(item), value)}
+                        />
+
+                    </View></View>
+                    
+                    ))}
+
+
+                    <View style={styles.addButtonContainer}>
+                        <TouchableOpacity onPress={() => addValue()}>
+                            <Ionicons name="add-circle" size={48} color={Theme.text.secondary} /> 
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity onPress={() => {setShowConfirmTrashSubmissionModal(true); calculateTotal()}}>
+                        <View style={styles.submitContainer}>
+                            
+                            {isLoading ? <ActivityIndicator size="small" color="white" /> : <Text style={styles.submitText}>Submit</Text>}
+                        </View> 
+                    </TouchableOpacity>
+                    
+                </View>
+                
+            </View>
+        </ScrollView>
+        
+        <Modal
+            visible={showConfirmTrashSubmissionModal}
+            animationType='fade'
+            transparent={true}
+            onRequestClose={() => setShowConfirmTrashSubmissionModal(false)}
+        >
+            <View style={styles.confirmTrashSubmissionModalContainer}>
+                <View style={styles.confirmTrashSubmissionModalMainContentContainer}>
+                    <View>
+                    
+                    
+                    <Text style={styles.acceptTrashText}>Accept Trash</Text>
+                    <Text style={styles.acceptTrashUsername}>Username: {username}</Text>
+
+                    
+                    <View style={styles.acceptTrashDirectory}>
+                            <ScrollView style={{width: "100%", height: 100}}>
+                            {trashList.map((item, index) => (
+                                <View key={index} style={styles.acceptTrashDirectoryContainer}>
+                                    <Text style={styles.acceptTrashDirectoryText}>{item.name} : {item.amount} x {item.multiplier}/100G</Text>
+                                    <Text style={styles.acceptTrashDirectoryTextAmount}>{item.amount * item.multiplier}</Text>
+                                </View>
+                            ))}
+                            </ScrollView>
+                        
+                        <View style={styles.totalCoinContainer}>
+                            <Text style={{color: Theme.text.primary}}>Total Coins: </Text>
+                            <Text style={{color: Theme.text.primary}}>{totalCoins}</Text>
+                        </View>
+                        
+                    </View>
+                    </View>
+                    <View style={styles.buttonsContainer}>
+                        <TouchableOpacity style={[styles.button, {backgroundColor: "#40ac74"}]}>
+                            <Text style={styles.buttonText} onPress={() => {submitTrash()}}>Accept</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.button, {backgroundColor: "#e03444"}]} onPress={() => setShowConfirmTrashSubmissionModal(false)}>
+                            <Text style={styles.buttonText}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+            </View>
+        </Modal>
+
+    </View>
+  )
+}
+
+
 
 export default AdminUserTrashSubmission;

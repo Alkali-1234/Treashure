@@ -95,6 +95,7 @@ export const logout = async () => {
     const auth = getAuth();
     await auth.signOut();
     await AsyncStorage.removeItem("user");
+    console.log("Removed Trace")
     return true;
 }
 

@@ -1,10 +1,9 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { Theme } from '../service/UniversalTheme'
 import { Ionicons } from 'react-native-vector-icons';
 import { handleAcceptItem, handleRejectItem } from '../service/AdminPanelService';
 
-const RequestCodeItem = ({item, getCodes}) => {
+const RequestCodeItem = ({item, getCodes, Theme}) => {
 
   const onHandleAcceptItem = async (item) => {
     try {
@@ -23,7 +22,27 @@ const RequestCodeItem = ({item, getCodes}) => {
       alert(error)
     }
   }
-
+    const styles = StyleSheet.create({
+        container: {
+            height: "10%",
+            width: '100%',
+            backgroundColor: Theme.secondary,
+            borderRadius: 5,
+            marginTop: 10,
+            padding: 10,
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            alignItems: 'center',
+        },
+        acceptRejectContainer: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+        },
+        acceptButton: {
+            marginRight: 10,
+        },
+    })
   return (
     <View style={styles.container}>
       <View style={{justifyContent: 'space-evenly', width: "50%"}}>
@@ -47,26 +66,6 @@ const RequestCodeItem = ({item, getCodes}) => {
   )
 }
 
-const styles = StyleSheet.create({
-    container: {
-        height: "10%",
-        width: '100%',
-        backgroundColor: Theme.secondary,
-        borderRadius: 5,
-        marginTop: 10,
-        padding: 10,
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    acceptRejectContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    acceptButton: {
-        marginRight: 10,
-    },
-})
+
 
 export default RequestCodeItem;
