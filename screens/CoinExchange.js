@@ -29,7 +29,7 @@ const CoinExchange = ({navigation, route}) => {
     setShowItemModal(false);
     
     setTimeout(() => {
-    navigation.navigate('RewardRequested', {item: selectedItem});
+    navigation.navigate('RewardRequested', {item: selectedItem, Theme: Theme});
     }, 100);
   }
   const styles = StyleSheet.create({
@@ -60,7 +60,7 @@ const CoinExchange = ({navigation, route}) => {
       {!userDataSnapshot.isAdmin ? 
       <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 10}}>
         <FontAwesome5 name="coins" size={24} color="green" />
-        <Text style={{textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginLeft: 10}}>{userDataSnapshot.coins}</Text>
+        <Text style={{textAlign: 'center', fontSize: 20, fontWeight: 'bold', marginLeft: 10, color: Theme.text.primary}}>{userDataSnapshot.coins}</Text>
       </View>
       
       : null}
