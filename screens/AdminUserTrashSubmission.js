@@ -326,8 +326,8 @@ const AdminUserTrashSubmission = ({navigation, route}) => {
                     </View>
                     </View>
                     <View style={styles.buttonsContainer}>
-                        <TouchableOpacity style={[styles.button, {backgroundColor: "#40ac74"}]}>
-                            <Text style={styles.buttonText} onPress={() => {submitTrash()}}>Accept</Text>
+                        <TouchableOpacity onPress={() => {submitTrash()}} style={[styles.button, {backgroundColor: "#40ac74"}]}>
+                            <Text style={styles.buttonText} >Accept</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.button, {backgroundColor: "#e03444"}]} onPress={() => setShowConfirmTrashSubmissionModal(false)}>
                             <Text style={styles.buttonText}>Close</Text>
